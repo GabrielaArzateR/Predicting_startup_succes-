@@ -10,8 +10,8 @@ def read(fname: str) -> str:
 setup(
     name="Dummy module",
     version="0.0.1",
-    author="Axel Mendoza",
-    author_email="axel.mendoza@epita.fr",
+    author="Gabriela Arzate",
+    author_email="lesliegabrielardz@outlook.com",
     description="Example description",
     license="BSD",
     packages=['mymodule'],
