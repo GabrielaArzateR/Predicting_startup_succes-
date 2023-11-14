@@ -7,4 +7,5 @@ mypy
 setuptools
 pre-commit
 seaborn
-sklearn
+scikit-learn
+
