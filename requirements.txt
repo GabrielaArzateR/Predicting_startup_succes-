@@ -8,5 +8,3 @@ setuptools
 pre-commit
 seaborn
 scikit-learn
-autoviz
-
