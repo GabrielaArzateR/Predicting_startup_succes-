@@ -9,3 +9,4 @@ pre-commit
 seaborn
 scikit-learn
 Jinja2
+pandas
