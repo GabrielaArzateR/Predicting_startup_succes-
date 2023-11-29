@@ -1,59 +1,61 @@
-# """
-# Module Description:
-# This module contains code for working with pandas DataFrame.
+"""
+Module Description:
+This module contains code for working with pandas DataFrame.
 
-# Author: Your Name
-# Date: Date when the module was created or last updated
-# """
-# import pandas as pd
+Author: Your Name
+Date: Date when the module was created or last updated
+"""
+import pandas as pd
 
-# def preprocess_data(file_path):
-#     """
-#     Preprocess the input DataFrame.
 
-#     Args:
-#         file_path (str): Path to the CSV file.
+def preprocess_data(file_path: str) -> pd.DataFrame:
+    """
+    Preprocess the input DataFrame.
 
-#     Returns:
-#         pd.DataFrame: Preprocessed DataFrame.
-#     """
-#     # Read the CSV file into a DataFrame
-#     data = pd.read_csv(file_path)
+    Args:
+        file_path (str): Path to the CSV file.
 
-#     # Map 'status' column to binary values
-#     data['status'] = data['status'].map({'acquired': 1, 'closed': 0})
+    Returns:
+        pd.DataFrame: Preprocessed DataFrame.
+    """
+    # Read the CSV file into a DataFrame
+    data: pd.DataFrame = pd.read_csv(file_path)
 
-#     # Convert date columns to datetime
-#     date_columns = ['founded_at', 'closed_at', 'first_funding_at', 'last_funding_at']
-#     for date_column in date_columns:
-#         data[date_column] = pd.to_datetime(data[date_column], errors='coerce')
+    # Map 'status' column to binary values
+    data['status'] = data['status'].map({'acquired': 1, 'closed': 0})
 
-#     # Convert datetime to timestamp (numerical)
-#     for date_column in date_columns:
-#         data[date_column] = data[date_column].astype(int)
+    # Convert date columns to datetime
+    date_columns = ['founded_at', 'closed_at', 'first_funding_at', 'last_funding_at']
+    for date_column in date_columns:
+        data[date_column] = pd.to_datetime(data[date_column], errors='coerce')
 
-#     # List of categorical columns
-#     categorical_columns = ['state_code', 'city', 'category_code']
+    # Convert datetime to timestamp (numerical)
+    for date_column in date_columns:
+        data[date_column] = data[date_column].astype(int)
 
-#     # Create a function to generate mappings
-#     def create_mapping(column):
-#         unique_values = data[column].unique()
-#         mapping = {value: i for i, value in enumerate(unique_values)}
-#         return mapping
+    # List of categorical columns
+    categorical_columns = ['state_code', 'city', 'category_code']
 
-#     # Apply mapping for each categorical column
-#     for column in categorical_columns:
-#         mapping = create_mapping(column)
-#         data[column] = data[column].map(mapping)
+    # Create a function to generate mappings
+    def create_mapping(column: str) -> dict:
+        unique_values = data[column].unique()
+        mapping = {value: i for i, value in enumerate(unique_values)}
+        return mapping
 
-#     # Print the mappings if needed
-#     for column in categorical_columns:
-#         print(f"{column} mapping: {create_mapping(column)}")
+    # Apply mapping for each categorical column
+    for column in categorical_columns:
+        mapping = create_mapping(column)
+        data[column] = data[column].map(mapping)
 
-#     return data
+    # Print the mappings if needed
+    for column in categorical_columns:
+        print(f"{column} mapping: {create_mapping(column)}")
 
-# # Specify the path to your CSV file
-# csv_file_path = 'data/startup.csv'
+    return data
 
-# # Call the preprocess_data function with the CSV file path
-# clean_data = preprocess_data(csv_file_path)
+
+# Specify the path to your CSV file
+csv_file_path: str = 'data/startup.csv'
+
+# Call the preprocess_data function with the CSV file path
+clean_data: pd.DataFrame = preprocess_data(csv_file_path)
