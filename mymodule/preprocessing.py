@@ -47,15 +47,4 @@ def preprocess_data(file_path: str) -> pd.DataFrame:
         mapping = create_mapping(column)
         data[column] = data[column].map(mapping)
 
-    # Print the mappings if needed
-    for column in categorical_columns:
-        print(f"{column} mapping: {create_mapping(column)}")
-
     return data
-
-
-# Specify the path to your CSV file
-csv_file_path: str = 'data/startup.csv'
-
-# Call the preprocess_data function with the CSV file path
-clean_data: pd.DataFrame = preprocess_data(csv_file_path)

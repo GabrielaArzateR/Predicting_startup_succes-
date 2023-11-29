@@ -4,9 +4,19 @@
 # Module Description:
 # This module defines the StartupPredictor class for making predictions using a trained model.
 # """
+# import os
+# import sys
 # from typing import Any
 # import pandas as pd
 # import joblib
+
+# current_directory = os.path.dirname(os.path.abspath(__file__))
+# sys.path.append(os.path.join(current_directory, '..'))
+
+# # Import preprocess_data from mymodule.preprocessing
+# from mymodule.preprocessing import (  # pylint: disable=wrong-import-position
+#     preprocess_data,
+# )
 
 
 # class StartupPredictor:
@@ -26,10 +36,11 @@
 #         Initialize the StartupPredictor.
 
 #         Args:
-#             model_path (str): Path to the saved model weights.
+#             model_path (str): Path to the saved model.
 #         """
+
 #         # Load the saved model
-#         self.model = joblib.load('')
+#         self.model = joblib.load(model_path)
 
 #     def preprocess_input(self, input_data: pd.DataFrame) -> pd.DataFrame:
 #         """
@@ -41,10 +52,8 @@
 #         Returns:
 #             pd.DataFrame: Preprocessed input data.
 #         """
-#         # Add any necessary preprocessing for your input data
-#         # This could include converting categorical variables to dummy variables, scaling, etc.
-#         # Make sure this preprocessing is consistent with what you did during training
-#         pass
+#         # No need to preprocess the input data in this case
+#         return input_data
 
 #     def predict(self, input_data: pd.DataFrame) -> Any:
 #         """
@@ -67,20 +76,27 @@
 
 # # Example of usage
 # if __name__ == "__main__":
-#     # Replace 'your_model_weights.joblib' with the actual path to your saved model weights
-#     model_path: str = '../best_model_weights.joblib'
+#     # Replace 'your_model.joblib' with the actual path to your saved model weights
+#     model_file_path: str = (
+#         '/Users/gabrielaarzate/Desktop/predicting_startup_succes/data/best_model.joblib'
+#     )
 
 #     # Create an instance of the StartupPredictor class
-#     startup_predictor = StartupPredictor(model_path)
+#     startup_predictor = StartupPredictor(model_file_path)
 
 #     # Replace 'input_data.csv' with the actual path to your input data file
-#     input_data_path: str = 'data/startup.csv'
+#     input_data_path: str = (
+#         '/Users/gabrielaarzate/Desktop/predicting_startup_succes/data/startup.csv'
+#     )
 
 #     # Load the input data
-#     input_data: pd.DataFrame = pd.read_csv(input_data_path)
+#     loaded_data: pd.DataFrame = pd.read_csv(input_data_path)
+
+#     # Use the preprocess_data function
+#     processed_data: pd.DataFrame = preprocess_data(loaded_data)
 
 #     # Make predictions
-#     predictions: Any = startup_predictor.predict(input_data)
+#     startup_predictions: Any = startup_predictor.predict(loaded_data)
 
 #     # Display predictions
-#     print(predictions)
+#     print(startup_predictions)
