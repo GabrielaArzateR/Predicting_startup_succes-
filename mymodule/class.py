@@ -8,6 +8,7 @@
 # import pandas as pd
 # import joblib
 
+
 # class StartupPredictor:
 #     """
 #     StartupPredictor class for making predictions using a trained model.
@@ -62,6 +63,7 @@
 #         predictions = self.model.predict(processed_data)
 
 #         return predictions
+
 
 # # Example of usage
 # if __name__ == "__main__":
