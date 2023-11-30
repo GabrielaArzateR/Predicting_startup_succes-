@@ -42,41 +42,56 @@ class StartupPredictor:
         # Load the saved model
         self.model = joblib.load(model_path)
 
-    def preprocess_input(self, file_path: str) -> pd.DataFrame:
+    def preprocess_input(self, data_path: str) -> pd.DataFrame:
         """
         Preprocess the input data.
 
         Args:
-            input_data (pd.DataFrame): Input data to be preprocessed.
+            data_path (str): Path to the CSV file.
 
         Returns:
             pd.DataFrame: Preprocessed input data.
         """
         # Use the imported preprocess_data function
-        processed_data = preprocess_data(file_path)
+        preprocessedd_data = preprocess_data(data_path)
 
-        return processed_data
+        return preprocessedd_data
 
-    def predict(self, input_data: pd.DataFrame) -> Any:
+    def predict(self, processed_data: pd.DataFrame) -> pd.DataFrame:
         """
         Make predictions using the preprocessed input data.
 
         Args:
-            input_data (pd.DataFrame): Preprocessed input data.
+            processed_data (pd.DataFrame): Preprocessed input data.
 
         Returns:
             Any: Predictions made by the model.
         """
-        # Preprocess the input data
-        processed_data = self.preprocess_input(input_data)
-
-        # Make predictions
+        # Make predictionss
         predictions = self.model.predict(processed_data)
 
         return predictions
 
+    def _predict(self, processed_data: pd.DataFrame) -> pd.DataFrame:
+        # Step 1: Define the reverse mapping for status labels
+        reverse_status_mapping = {1: 'acquired', 0: 'closed'}
 
-# Example of usage
+        # Step 2: Use the model to make numeric predictions
+        numeric_predictions = self.model.predict(processed_data)
+
+        # Step 3: Map numeric predictions to labels
+        label_predictionss = pd.Series(numeric_predictions).map(reverse_status_mapping)
+
+        # Step 4: Create a DataFrame with the label predictions
+        result_df = pd.DataFrame({'prediction': label_predictionss})
+
+        # Step 5: Concatenate the label predictions with the original processed_data
+        result_df = pd.concat([processed_data, result_df], axis=1)
+
+        return result_df
+
+
+# Example of usages
 if __name__ == "__main__":
     # Replace 'your_model.joblib' with the actual path to your saved model weights
     model_file_path: str = (
@@ -96,5 +111,14 @@ if __name__ == "__main__":
     # Make predictions
     startup_predictions: Any = startup_predictor.predict(preprocessed_data)
 
-    # Display predictions
+    # Display predictions from the 'predict' method
+    print("Predictions using 'predict' method:")
     print(startup_predictions)
+
+    # Make label predictions using the protected '_predict' method
+    # pylint: disable=protected-access
+    label_predictions: pd.DataFrame = startup_predictor._predict(preprocessed_data)
+
+    # Display label predictions from the '_predict' method
+    print("\nLabel Predictions using '_predict' method:")
+    print(label_predictions)
