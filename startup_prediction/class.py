@@ -14,7 +14,7 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_directory, '..'))
 
 # Import preprocess_data from mymodule.preprocessing
-from mymodule.preprocessing import (  # pylint: disable=wrong-import-position
+from startup_prediction.preprocessing import (  # pylint: disable=wrong-import-position
     preprocess_data,
 )
 

@@ -1,7 +1,7 @@
 # test_helloword.py
 
 """Dummy module description"""
-from mymodule.helloword import helloword
+from startup_prediction.helloword import helloword
 
 
 def test_helloworld() -> None:
