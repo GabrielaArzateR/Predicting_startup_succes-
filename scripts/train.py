@@ -11,6 +11,7 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_directory, '..'))
 
 # Import the StartupPredictor class from mymodule.class
+# pylint: disable=wrong-import-position
 from startup_prediction.script import (  # pylint: disable=wrong-import-position
     StartupPredictor,
 )
