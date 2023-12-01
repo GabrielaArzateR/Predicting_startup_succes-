@@ -1,24 +1,26 @@
-# Terminator Challenge
-This repository solves the Terminator Challenge. It showcases a model training, evaluation, image similarity search and relabelling as well as many extra bonuses ;)
+# # Startup Success Predictor
+Welcome to the Startup Success Predictor, a data-driven solution for forecasting the success of startup ventures. This repository encompasses model training, evaluation, and prediction to help you gain valuable insights into the potential success of startups.
 
 ## Installation
-Tested with:
-- Ubuntu 22.04
-- Docker 24.0.4 (mandatory to containerize the code)
-- Python >= 3.10.12 (mandatory for typing)
-- Cuda Toolkit 12.1
-- SLI 2080 Ti
 
+Follow these steps to set up the Startup Success Predictor on your local machine:
+
+### Prerequisites
+
+Make sure you have the following installed:
+- Python (version 3.x)
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/GabrielaArzateR/startup-success-predictor.git
+cd startup-success-predictor
 
 Create a new environment and install the Python requirements:
 ```
 pip install -r requirements.txt
-```
 
-Make sure to install Docker
-
-## Demonstration Notebook
-For a practical demonstration of the project's capabilities, please refer to the `demo.ipynb` notebook.
+### Demonstration Notebook
 
 This Jupyter notebook contains detailed code examples, along with visualizations, to showcase the functionality and features of the project. It serves as a useful guide for understanding and interacting with the project's components.
 
@@ -26,38 +28,37 @@ This Jupyter notebook contains detailed code examples, along with visualizations
 You can find the structure of the project below:
 ```bash
 .
+├── README.md
 ├── data
-│   ├── test
-│   │   ├── 0
-│   │   └── 1
-│   └── train
-│       ├── 0
-│       └── 1
+│   ├── best_model.joblib
+│   └── startup.csv
+├── notebook
+│   └── experimentation.ipynb
+├── pyproject.toml
+├── requirements.txt
 ├── scripts
-│   ├── evaluate.py
-│   ├── image_similarity.py
-│   ├── relabel.py
-│   └── train.py
-├── service.py
+│   └── train.py
 ├── setup.py
-└── terminator_classifier
+└── startup_prediction
     ├── __init__.py
-    ├── arguments.py
-    ├── constants.py
-    ├── data_loader.py
-    ├── dataset.py
-    ├── image_similarity_search.py
-    ├── parse_training_data.py
-    ├── relabel.py
-    ├── scripts.py
-    ├── test.py
-    ├── tests
-    │   ├── __init__.py
-    │   ├── test_image_similarity.py
-    │   ├── test_relabel.py
-    │   └── test_train.py
-    ├── train.py
-    └── visualization.py
+    ├── __pycache__
+    │   ├── __init__.cpython-310.pyc
+    │   ├── __init__.cpython-312.pyc
+    │   ├── preprocessing.cpython-310.pyc
+    │   ├── preprocessing.cpython-312.pyc
+    │   ├── script.cpython-310.pyc
+    │   ├── script.cpython-312.pyc
+    │   └── test_preprocessing.cpython-312-pytest-7.4.3.pyc
+    ├── helloword.py
+    ├── preprocessing.py
+    ├── script.py
+    ├── test_preprocessing.py
+    └── tests
+        ├── __init__.py
+        ├── __pycache__
+        │   ├── __init__.cpython-312.pyc
+        │   └── test_train_test.cpython-312-pytest-7.4.3.pyc
+        └── test_train_test.py
 ```
 The most important components are the following:
 - `data`: Contains the training and test data, organized into subdirectories for different classes.
@@ -110,11 +111,6 @@ curl -X POST \
     http://localhost:3000/evaluate
 
 ```
-
-
-
-
-
 
 ## Conclusion
 Overall, I've really enjoyed your challenge !
