@@ -14,7 +14,7 @@ setup(
     author_email="lesliegabrielardz@outlook.com",
     description="Example description",
     license="BSD",
-    packages=['mymodule'],
+    packages=['startup_prediction'],
     long_description=read('README.md'),
     classifiers=[
         "Development Status :: 3 - Alpha",
