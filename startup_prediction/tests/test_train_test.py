@@ -24,10 +24,11 @@ def test_startup_predictor() -> None:
     # Preprocess the input data and make predictions
     predictions = startup_predictor.predict(startup_predictor.preprocess_input(input_data_path))
 
-    # Ensure that predictions are not None or empty, depending on your expectations
+    ## Ignore Bandit warning for using assert statements
     assert predictions is not None, "Predictions should not be None"
     assert len(predictions) > 0, "Predictions should not be empty"
 
 
 if __name__ == '__main__':
     test_startup_predictor()
+    print("Test completed.")
