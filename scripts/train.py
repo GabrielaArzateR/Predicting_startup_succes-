@@ -6,7 +6,6 @@ allowing users to analyze and classify data with the trained model.
 import os
 import sys
 import argparse
-import pandas as pd
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_directory, '..'))
@@ -35,12 +34,6 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Random Forest Predictions")
 
     # Add a command-line argument for the model file path
-    parser.add_argument(
-        'model_path',
-        type=str,
-        help='Path to the saved Random Forest model weights (joblib file)',
-    )
-
     # Add a command-line argument for the input data file path
     parser.add_argument(
         'input_data_path',
@@ -51,17 +44,13 @@ def main() -> None:
     # Parse the command-line arguments
     args = parser.parse_args()
 
-    # Create an instance of the StartupPredictor class
-    startup_predictor = StartupPredictor(args.model_path)
-
-    # Preprocess the input data
-    preprocessed_data: pd.DataFrame = startup_predictor.preprocess_input(args.input_data_path)
-
-    # Make predictions
-    predictions: pd.DataFrame = startup_predictor.predict(preprocessed_data)
-
-    # Display predictions
-    print("Predictions using Random Forest model:")
+    # You can call your train_test function here with the data object
+    startup_predictor = StartupPredictor(
+        '/Users/gabrielaarzate/Desktop/predicting_startup_succes/data/best_model.joblib'
+    )  # Replace with your actual model path
+    preprocessed_data = startup_predictor.preprocess_input(args.input_data_path)
+    # pylint: disable=protected-access
+    predictions = startup_predictor._predict(preprocessed_data)
     print(predictions)
 
 
