@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+# Startup Success Predictor
+=======
 # # Startup Success Predictor
+>>>>>>> main
 Welcome to the Startup Success Predictor, a data-driven solution for forecasting the success of startup ventures. This repository encompasses model training, evaluation, and prediction to help you gain valuable insights into the potential success of startups.
 
 ## Installation
@@ -20,7 +24,16 @@ Create a new environment and install the Python requirements:
 ```
 pip install -r requirements.txt
 
+<<<<<<< HEAD
+
+Follow these steps to set up the Startup Success Predictor on your local machine:
+
+
+
+## Demonstration Notebook
+=======
 ### Demonstration Notebook
+>>>>>>> main
 
 This Jupyter notebook contains detailed code examples, along with visualizations, to showcase the functionality and features of the project. It serves as a useful guide for understanding and interacting with the project's components.
 
@@ -113,9 +126,6 @@ curl -X POST \
 ```
 
 ## Conclusion
-Overall, I've really enjoyed your challenge !
-I hope that you appreciated all these cool features.
-See you soon ;)
 
 
 
