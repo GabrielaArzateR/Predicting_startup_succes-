@@ -11,6 +11,7 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_directory, '..'))
 
 # Import the StartupPredictor class from mymodule.class
+# pylint: disable=wrong-import-position
 from startup_prediction.script import (  # pylint: disable=wrong-import-position
     StartupPredictor,
 )
@@ -46,7 +47,7 @@ def main() -> None:
 
     # You can call your train_test function here with the data object
     startup_predictor = StartupPredictor(
-        '/Users/gabrielaarzate/Desktop/predicting_startup_succes/data/best_model.joblib'
+        'data/best_model.joblib'
     )  # Replace with your actual model path
     preprocessed_data = startup_predictor.preprocess_input(args.input_data_path)
     # pylint: disable=protected-access
