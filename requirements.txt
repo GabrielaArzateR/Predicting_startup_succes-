@@ -11,3 +11,4 @@ scikit-learn
 Jinja2
 pandas
 tabulate
+nbformat>=4.2.0
