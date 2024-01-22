@@ -21,8 +21,8 @@ def test_startup_predictor() -> None:
     # Preprocess the input data and make predictions
     predictions = startup_predictor.predict(startup_predictor.preprocess_input(input_data_path))
 
-    assert predictions is not None, "Predictions should not be None"
-    assert len(predictions) > 0, "Predictions should not be empty"
+    assert predictions is not None, "Predictions should not be None"  # nosec
+    assert len(predictions) > 0, "Predictions should not be empty"  # nosec
 
 
 if __name__ == '__main__':
