@@ -12,3 +12,4 @@ Jinja2
 pandas
 tabulate
 nbformat>=4.2.0
+jupyter_to_medium
