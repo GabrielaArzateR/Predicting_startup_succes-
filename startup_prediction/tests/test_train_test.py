@@ -3,6 +3,7 @@ This module contains test cases for the Random Forest Model.
 """
 # When you want to run this file change the debugging to pytest otherwise you will have
 # an error.
+import sklearn
 from startup_prediction.script import StartupPredictor
 
 
@@ -28,3 +29,6 @@ def test_startup_predictor() -> None:
 if __name__ == '__main__':
     test_startup_predictor()
     print("Test completed.")
+
+
+print(sklearn.__version__)
