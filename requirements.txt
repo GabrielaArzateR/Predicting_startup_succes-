@@ -11,5 +11,5 @@ scikit-learn
 Jinja2
 pandas
 tabulate
-nbformat>=4.2.0s
+nbformat>=4.2.0s #visualization
 
