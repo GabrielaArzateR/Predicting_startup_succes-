@@ -4,6 +4,7 @@ mymodule/class.py
 Module Description:
 This module defines the StartupPredictor class for making predictions using a trained model.
 """
+
 import os
 import sys
 from typing import Any

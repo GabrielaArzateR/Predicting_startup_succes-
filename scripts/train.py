@@ -3,6 +3,7 @@ This module provides a command-line interface for running the
 Ramdom Forest Model on a specified file,
 allowing users to analyze and classify data with the trained model.
 """
+
 import os
 import sys
 import argparse
