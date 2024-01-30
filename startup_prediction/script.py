@@ -38,6 +38,9 @@ class StartupPredictor:
         Args:
             model_path (str): Path to the saved model.
         """
+        # Check the joblib version
+        joblib_version = joblib.__version__
+        print("joblib version:", joblib_version)
 
         # Load the saved model
         self.model = joblib.load(model_path)
