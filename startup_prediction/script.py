@@ -4,6 +4,7 @@ mymodule/class.py
 Module Description:
 This module defines the StartupPredictor class for making predictions using a trained model.
 """
+
 import os
 import sys
 from typing import Any
@@ -38,6 +39,9 @@ class StartupPredictor:
         Args:
             model_path (str): Path to the saved model.
         """
+        # Check the joblib version #test
+        joblib_version = joblib.__version__
+        print("joblib version:", joblib_version)
 
         # Load the saved model
         self.model = joblib.load(model_path)
