@@ -1,14 +1,15 @@
+#testing tools
 pytest
 black
 pylint
 pytest
 bandit
+#others
 mypy
 setuptools
 pre-commit
 seaborn
 scikit-learn
-Jinja2
 pandas
 tabulate
 nbformat>=4.2.0s #visualization
