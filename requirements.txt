@@ -13,3 +13,4 @@ scikit-learn==1.3.2
 pandas
 tabulate
 nbformat>=4.2.0s #visualization
+plotly
