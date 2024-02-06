@@ -14,3 +14,4 @@ pandas
 tabulate
 nbformat>=4.2.0s #visualization
 plotly
+pyarrow
