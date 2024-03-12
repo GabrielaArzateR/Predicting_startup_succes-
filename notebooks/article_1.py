@@ -5,32 +5,30 @@
 # 
 # Learn about the **factors** leading to startups being acquired and **how** to apply exploratory data analysis to identify these factors.
 # 
-# The dataset we will explore today is sourced from the Kaggle website. It contains information regarding industries, acquisitions, and investment details of nearly a thousand startups based in the USA from the 1980s to 2013.
+# We will explore the [Startup Success Prediction dataset](https://www.kaggle.com/datasets/manishkc06/startup-success-prediction) released on [Kaggle](https://www.kaggle.com/). It contains information about industries, acquisitions, and investment details of nearly a thousand startups based in the USA from the 1980s to 2013.
 # 
 # It's essential to understand how to transform raw data into meaningful information. To achieve this, we will follow the workflow below: 
 # 
-# 1. Data Exploration
-# 2. Preprocessing 
-# 3. Data Analysis 
-# 4. Conclusion
+# 1. Data exploration
+# 2. Pre-processing 
+# 3. Data analysis 
+# 4. Data-driven conclusions
 # 
 # 
-# **Objectives of our analysis include:**
+# Here are the main objectives of our analysis:
 # 
-# - Compare industries with the most startup acquisitions, emphasizing the importance of industry type.
+# - Examine the industries where startup acquisitions are most common, highlighting how crucial the type of industry is. 
 # - Examine whether reaching certain milestones increases a startup's likelihood of acquisition. 
 # - Analyze the average total funding of startups that get acquired versus those that close.
 # - Evaluate if startups with Series A, B, or C funding are more likely to succeed than those backed by angel investors or VC.
 # 
-# <!---
-# Not very good phrasing
-# -->
-# Before we start, let's make sure we all know the basics concepts of startups.
+# Before we start, let's investigate the startup related concepts to understand the key challenges in this ecosystem.
 # 
 # ## Understanding the Startup Ecosystem
-# In the startup field, there are important concepts to understand. First, startups raise money in stages called **funding rounds**, like Series A, B, or C. These rounds help them grow. Second, startups set goals called **milestones**, like launching a product or getting a certain number of users. These reflect their performance to the investors.
+# In the startup field, there are important concepts to understand. First, startups raise money in stages called **funding rounds**, like Series A, B, or C. These rounds enables the startups to invest in the necessary resources for their growth. Second, startups set goals called **milestones**, like launching a product or getting a certain number of users. These reflect their performance to the investors.
 # 
-# Finally, startups secure funding from either **angel investors** or **venture capital** firms.  Angel investors are high net worth individuals who provide personal capital for investment, whereas venture capital firms are corporate entities specializing in investing in startups.
+# Finally, startups secure funding from to types of source:
+# - **Angel investors** are high net worth individuals who provide personal capital for investment. - **venture capital firms** are corporate entities specializing in investing in startups.
 # 
 # Let’s get in to the preliminary steps. 
 
