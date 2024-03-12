@@ -51,7 +51,7 @@ import plotly.express as px
 from scipy.stats import zscore
 
 
-# Let's load the data into a DataFrame.
+# Now, we load the data into a [Pandas](https://pandas.pydata.org/) DataFrame.
 
 # In[3]:
 
@@ -66,18 +66,10 @@ data_df = pd.read_csv(file_path, encoding="ISO-8859-1")
 data_df.head(2)
 
 
-# Now, let's focus on understanding the significance of the Target Variable.
+# Next, let's focus on understanding the significance of the Target Variable.
 
-# #####  **Target Variable**
-
-# In our pursuit to understand factors behind a startup's success or failure, `status` variable plays a role by indicating whether a startup has been acquired or closed. This binary variable dictates the analysis direction.  
+# The `status` variable is the most important feature in this dataset. This binary variable indicates whether a startup has been acquired or closed.
 # 
-# Importance of identifying the target variable:
-#   
-# - **Objective Clarity:** Provides a clear goal understanding the factors driving startup acquisition.
-#   
-# - **Feature Selection:** Guides the selection of relevant factors impacting acquisition.
-#   
 # When analyzing the variable, it shows that 597 startups in our dataset were acquired, while 326 startups ended up closing down.
 
 # In[5]:
@@ -86,7 +78,7 @@ data_df.head(2)
 data_df['status'].head(2)
 
 
-# ##  Data Preprocessing
+# ## Data Pre-processing
 
 # Preprocessing involves a comprehensive set of activities designed to clean and organize raw data. 
 # We'll accomplish that by applying:
