@@ -70,7 +70,7 @@ data_df.head(2)
 
 # The `status` variable is the most important feature in this dataset. This binary variable indicates whether a startup has been acquired or closed.
 # 
-# When analyzing the variable, it shows that 597 startups in our dataset were acquired, while 326 startups ended up closing down.
+# When analyzing the variable, it shows that 597 startups in our dataset were acquired, while 326 startups closed down.
 
 # In[5]:
 
@@ -80,22 +80,18 @@ data_df['status'].head(2)
 
 # ## Data Pre-processing
 
-# Preprocessing involves a comprehensive set of activities designed to clean and organize raw data. 
-# We'll accomplish that by applying:
+# The pre-processing step involves cleaning and organizing the raw data.
 # 
-# **Data Cleaning** consist on identifying and correcting data errors, such as typos, duplicates, or incorrect entries, is essential for maintaining data integrity. We'll focus on:
-#   
-# - Handle Irrelevant Features
-# - Handle Missing Values 
-# - Handle Negative Values
+# We'll accomplish following these steps:
 # 
-# **Data Transformation** modifies data into a more analyzable format. Some actions taken in this part:
+# - The **Data cleaning** step consists on identifying and correcting data errors, such as typos, duplicates, or incorrect entries. It is essential for maintaining data integrity. We'll focus on handling:
+# - - The irrelevant features
+# - - The missing values
+# - - The negative values where it shouldn't be so.
 # 
-# - Normalization and Standardization: These techniques adjust data to a common scale, making it easier to compare.
-# - Encoding Categorical Data: Transforming categorical variables into numerical formats.
-# 
-# 
-# Together, these processes transform raw data into a structured, clean format, building the foundation for effective and accurate analysis.
+# - The **Data transformation** step modifies data to re-organize them into a format appropriate for performing analysis. These are the common transformatio that we will perform:
+# - - **Normalization** and **standardization**: These techniques adjust data to a common scale, making it easier to compare them.
+# - - **Encoding categorical data**: Transforming categorical variables into numerical formats.
 
 # ### Handle Irrelevant Features
 
