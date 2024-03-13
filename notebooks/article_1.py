@@ -3,6 +3,7 @@
 
 # # Data Insight: Top Factors For Startup Success
 # 
+#
 # Learn about the **factors** leading to startups being acquired and **how** to apply exploratory data analysis to identify these factors.
 # 
 # We will explore the [Startup Success Prediction dataset](https://www.kaggle.com/datasets/manishkc06/startup-success-prediction) released on [Kaggle](https://www.kaggle.com/). It contains information about industries, acquisitions, and investment details of nearly a thousand startups based in the USA from the 1980s to 2013.
