@@ -12,7 +12,7 @@
 #### Handle Negative Values: Function np.abs()
 ### Outliers
 #### Identifying Outliers: Histogram Analysis
-#### Identifying Outliers: Function z-score 
+#### Identifying Outliers: Function z-score
 #### Handle Outliers: log-transformed method
 ### Creating Temporary Variables
 ##### General Changes
@@ -20,4 +20,3 @@
 #### Categorical to Numerical
 #### Datatime to Numerical
 #### Recap
-
