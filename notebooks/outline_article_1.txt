@@ -1,0 +1,23 @@
+# Data Insight: Top Factors For Startup Success
+## Data Exploration
+## Data Pre-processing
+### Handle Irrelevant Features
+### Missing Values
+### Top 10 Sectors with High Startup Acquisition Rates
+### Year of the highest number of startups founded
+### Startup Acquisitions Across U.S. States
+### Negative values
+#### Identifying Negative Values: Box Plot
+#### Identifying Negative Values: Scatterplot
+#### Handle Negative Values: Function np.abs()
+### Outliers
+#### Identifying Outliers: Histogram Analysis
+#### Identifying Outliers: Function z-score 
+#### Handle Outliers: log-transformed method
+### Creating Temporary Variables
+##### General Changes
+### Transforming Non-numeric Data into Numeric Values
+#### Categorical to Numerical
+#### Datatime to Numerical
+#### Recap
+
