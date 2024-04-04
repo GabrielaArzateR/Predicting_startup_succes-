@@ -48,7 +48,7 @@ def main() -> None:
 
     # You can call your train_test function here with the data object
     startup_predictor = StartupPredictor(
-        'data/best_model.joblib'
+        'saved_model/best_model.joblib'
     )  # Replace with your actual model path
     preprocessed_data = startup_predictor.preprocess_input(args.input_data_path)
     # pylint: disable=protected-access
