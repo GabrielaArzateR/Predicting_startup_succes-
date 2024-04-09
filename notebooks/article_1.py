@@ -3,39 +3,40 @@
 
 # # Data Insight: Top Factors For Startup Success
 # 
-# Learn about the **factors** that makes startups get acquired and **how** to apply exploratory data analysis to identify these factors.
+# Building a successful startup is hard. Statistics show that [90% of startups fail](https://www.failory.com/blog/startup-failure-rate). So, what are the main factors that make successful startups?
 # 
-# We will explore the [Startup Success Prediction dataset](https://www.kaggle.com/datasets/manishkc06/startup-success-prediction) released on [Kaggle](https://www.kaggle.com/). It contains information about industries, acquisitions, and investment details of nearly a thousand startups based in the USA from the 1980s to 2013.
+# In this article, we will explore the [Startup Success Prediction dataset](https://www.kaggle.com/datasets/manishkc06/startup-success-prediction) released on [Kaggle](https://www.kaggle.com/) to find data insights on the success of startups.
 # 
-# It's essential to understand how to transform raw data into meaningful information. To achieve this, we will follow the workflow below: 
+# This dataset contains information about industries, acquisitions, and investment details of nearly a thousand startups based in the USA from the 1980s to 2013.
 # 
+# To be able to extract interesting trends from data, it's essential to understand how to transform raw data into meaningful information. To achieve this goal, we will perform the following steps: 
 # 1. Data exploration
 # 2. Pre-processing 
 # 3. Data analysis 
 # 4. Data-driven conclusions
 # 
-# 
-# Here are the main objectives of our analysis:
-# 
-# - Examine the industries where startup acquisitions are most common.
-# - Examine whether reaching certain milestones increases a startup's likelihood of acquisition. 
-# - Analyze the average total funding of startups that get acquired versus those that close.
-# - Compare success rates of startups with Series A, B, or C funding to those supported by angel investors or VC
+# Here are the main questions we will answer:
+# - In which industries are startup acquisitions most common?
+# - Does reaching certain milestones increase a startup's chance of being acquired?
+# - What is the average total funding for startups that get acquired versus those that fail?
+# - How do success rates compare between startups with Series A, B, or C funding and those supported by angel investors or venture capitalists?
 # 
 # Let's begin by understanding some concepts related to startups.
 # 
 # ## Understanding the Startup Ecosystem
-# In the startup field, startups raise money in stages called **funding rounds**, like Series A, B, or C. These rounds enables the startups to invest in the necessary resources for their growth. Second, startups set goals called **milestones**, like launching a product or getting a certain number of users. These reflect their performance to the investors.
+# Startups raise money in stages called **funding rounds**, like Series A, B, or C. These rounds enables the startups to invest in the necessary resources for their growth
+# 
+# Startups set goals called **milestones**, like launching a product or getting a certain number of users. These reflect their performance to the investors.
 # 
 # Finally, startups secure funding from two types of source:
-# - **Angel investors** are high net worth individuals who provide personal capital for investment.
-# - **Venture capital firms** are corporate entities specializing in investing in startups.
+# - **Angel investors** are individuals who provide personal capital for investment.
+# - **Venture capital firms** are corporate entities specializing startup investments.
 # 
-# Let’s get in to the preliminary steps. 
+# Now that you understand the context, let's start the data exploration.
 
 # ## Data Exploration
 
-# Data exploration is the first step in data analysis. It involves examining datasets to identify patterns and anomalies.
+# Data exploration is the first step in data analysis. It involves examining datasets to identify patterns and anomalies. 
 # 
 # The following libraries provide the necessary tools and functions for data manipulation, analysis, and visualization.
 
@@ -45,14 +46,14 @@
 import os
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
 from scipy.stats import zscore
 
 
-# Now, we load the data into a [Pandas](https://pandas.pydata.org/) DataFrame.
+# Next, we load the data into a [Pandas](https://pandas.pydata.org/) dataframe.
 
 # In[67]:
 
@@ -68,8 +69,6 @@ columns_to_copy = ["status", "state_code", "category_code"]
 categorical_data = data_df[columns_to_copy].copy()
 
 
-# Next, let's focus on understanding the significance of the **Target Variable**.
-# 
 # The `status` variable is the most important feature in this dataset. This binary variable indicates whether a startup has been acquired or closed.
 
 # In[69]:
