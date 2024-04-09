@@ -83,7 +83,7 @@ df['binary_status'] = df['status'].map({'acquired': 1, 'closed': 0})
 # Counting the occurrences of each status
 status_counts = df['binary_status'].value_counts()
 
-# Plotting the bar plot
+# Show the bar plot
 plt.bar(status_counts.index, status_counts.values, color=['green', 'red'])
 plt.xticks([0, 1], ['Closed','Acquired'])
 plt.xlabel('Status')
@@ -92,23 +92,20 @@ plt.title('Acquired vs. Closed Startups')
 plt.show()
 
 
-# When analyzing the variable, it shows that 597 startups in our dataset were acquired, while 326 startups closed down.
-# 
-# With the target variable identified, let's proceed to data preparation.
+# 597 startups in our dataset were acquired, while 326 startups closed. This means 64% of startups were aquired. This is a biased result. From [trustworthy sources](https://explodingtopics.com/blog/startup-failure-stats), we know that less than 10% of startup succeed. It is likely that most companies that reported their data in this dataset were already successful startups.
 
 # ## Data Pre-processing
 
 # The pre-processing step involves cleaning and organizing the raw data.
-# We'll accomplish following these steps:
+# To do so, we will following these steps:
+# - **Data cleaning**: This step consists on identifying and correcting data errors, such as typos, duplicates, or incorrect entries. It is essential for maintaining data integrity. We will put a particular attention on handling:
+# - - The irrelevant features.
+# - - The missing values.
+# - - The negative values where it shouldn't be so.
 # 
-# The **Data cleaning** step consists on identifying and correcting data errors, such as typos, duplicates, or incorrect entries. It is essential for maintaining data integrity. We'll focus on handling:
-# -  The irrelevant features
-# -  The missing values
-# -  The negative values where it shouldn't be so.
-# 
-# The **Data transformation** step modifies data to re-organize them into a format appropriate for performing analysis. These are the common transformation that we will perform:
-# -  **Normalization** and **standardization**: These techniques adjust data to a common scale, making it easier to compare them.
-# -  **Encoding categorical data**: Transforming categorical variables into numerical formats.
+# - **Data transformation**: Modifies data to re-organize them into a format appropriate for performing analysis. These are the common transformation we will perform:
+# - - **Normalization** and **standardization**: These techniques adjust data to a common scale, making it easier to compare them.
+# - - **Encoding categorical data**: Transforming categorical variables into numerical formats.
 # 
 
 # ### Handle Irrelevant Features
@@ -118,37 +115,37 @@ plt.show()
 # - Eliminating irrelevant variables simplifies the analysis process.
 # - It ensures focus on meaningful factors by reducing unnecessary information and improving clarity in data exploration.
 # 
-# To continue, we'll remove the following variables and explain why for each.
+# To continue, we'll remove these variables:
 
 # In[70]:
 
 
 data_df = data_df.drop([
-    'Unnamed: 0',   # Irrelevant data
-    'latitude',     # Irrelevant data
-    'longitude',    # Irrelevant data
-    'zip_code',     # Irrelevant data
-    'id',           # Irrelevant data
-    'Unnamed: 6',   # Irrelevant data
-    'name',         # Irrelevant data
-    'labels',       # Same data as status
-    'state_code.1', # Same data as state_code
-    'is_CA',        # Binary column, not needed 
-    'is_NY',        # Binary column, not needed
-    'is_MA',        # Binary column, not needed
-    'is_TX',        # Binary column, not needed
-    'is_otherstate',# Binary column, not needed
-    'is_software',  # Binary column, not needed
-    'is_web',       # Binary column, not needed
-    'is_mobile',    # Binary column, not needed
-    'is_enterprise',# Binary column, not needed
-    'is_advertising',# Binary column, not needed
-    'is_gamesvideo',# Binary column, not needed
-    'is_ecommerce', # Binary column, not needed
-    'is_biotech',   # Binary column, not needed
-    'is_consulting',# Binary column, not needed
+    'Unnamed: 0',      # Irrelevant data
+    'latitude',        # Irrelevant data
+    'longitude',       # Irrelevant data
+    'zip_code',        # Irrelevant data
+    'id',              # Irrelevant data
+    'Unnamed: 6',      # Irrelevant data
+    'name',            # Irrelevant data
+    'labels',          # Same data as status
+    'state_code.1',    # Same data as state_code
+    'is_CA',           # Binary column, not needed 
+    'is_NY',           # Binary column, not needed
+    'is_MA',           # Binary column, not needed
+    'is_TX',           # Binary column, not needed
+    'is_otherstate',   # Binary column, not needed
+    'is_software',     # Binary column, not needed
+    'is_web',          # Binary column, not needed
+    'is_mobile',       # Binary column, not needed
+    'is_enterprise',   # Binary column, not needed
+    'is_advertising',  # Binary column, not needed
+    'is_gamesvideo',   # Binary column, not needed
+    'is_ecommerce',    # Binary column, not needed
+    'is_biotech',      # Binary column, not needed
+    'is_consulting',   # Binary column, not needed
     'is_othercategory',# Binary column, not needed
-    'object_id'],   # Irrelevant data
+    'object_id'],      # Irrelevant data
     axis=1,
 ).copy()
 data_df.head(2)
@@ -167,79 +164,68 @@ data_df.info()
 
 #  ### Missing Values
 
-# Missing values (NA) are data points in a dataset where information is simply not available or recorded for a specific attribute or variable. 
+# Missing values are data points in a dataset where information is simply not recorded for a specific variable. 
 # 
-# Importance of **handling** missing values:
-# 
-# - Preserve the integrity of your dataset. Without proper handling, NA can lead to biased or misleading results in statistical analyses. 
-#  
-# - Maintain the reliability of your analyses, making them more robust and trustworthy.
+# It is important to handle missing values to preserve the integrity of your dataset. Without proper handling, null values can lead to errors or misleading results during statistical analyses.
 
 # In[72]:
 
 
-x= data_df.isnull().sum()
+x = data_df.isnull().sum()
 x.sort_values(ascending=False)
 
 
-# It's important to remember that handling NA varies based on data characteristics and analysis goals. The chosen method should be tailored to each case.
+# It's important to remember that handling NA varies based on data characteristics and analysis goals. The chosen method should be specific to each case.
 # 
 # As shown above, we've identified **three features** that contain missing values.
 # 
-# Given that `age_first_milestone_year` and `age_last_milestone_year` are continuous numerical variables, our chosen imputation method will involve filling the missing values with the respective means for these variables. To accomplish this, we will apply the following method.
-
-#  **Fillna() Method** provides:
-# 
-# - Flexibility in handling missing data by replacing NaN values with custom alternatives, like specific numbers, text, or computed values.
-#   
-# This method works well for continuous numerical variables and retains the original distribution by centering values around the data's central tendency.
+# Given that `age_first_milestone_year` and `age_last_milestone_year` are continuous numerical variables, our chosen imputation method will involve filling the missing values with the respective means for these variables.
 
 # In[73]:
 
 
-data_df["age_first_milestone_year"] = data_df["age_first_milestone_year"].fillna(data_df["age_first_milestone_year"].mean())
-data_df["age_last_milestone_year"] = data_df["age_last_milestone_year"].fillna(data_df["age_last_milestone_year"].mean())
+data_df["age_first_milestone_year"] = data_df["age_first_milestone_year"].fillna(
+    data_df["age_first_milestone_year"].mean()
+)
+data_df["age_last_milestone_year"] = data_df["age_last_milestone_year"].fillna(
+    data_df["age_last_milestone_year"].mean()
+)
 
 
-# In[74]:
-
-
-data= data_df.isnull().sum()
-data.sort_values(ascending=False)
-
-
-# **General Changes:**
-# 
-# - Imputed values for `age_first_milestone_year` and `age_last_milestone_year`.
+# The missing values in `closed_at` represent startups that are still open and will not be filled for now. This approach preserves the information that certain startups are still active without arbitrarily assigning a closure date.
 #   
-# - Missing values in `closed_at` represent startups that are still open and will not be filled for now. This approach preserves the information that certain startups are still active without arbitrarily assigning a closure date. 
-#   
-# Now that we've established the significance of handling missing values, let's proceed with the next step.
+# Now that we've handled missing values, let's proceed with the negative values.
 
 # ### Negative values
 
 # Negative values can be important indicators, especially in financial data where they often represent debt or losses. Removing them without careful consideration could result in missing critical information. 
 # 
-# However, in other contexts, negative numbers might indicate errors or require changes to the data.
+# However, negative numbers might indicate errors. Thus requiring changes to the data.
 # 
-# Before we continue, we will convert the following columns into datetime format to ensure that they are suitable for time based analysis.
+# Before we continue, we will convert the following columns into datetime format to ensure that they are suitable for a time based analysis.
 
 # In[75]:
 
 
-data_df.founded_at=pd.to_datetime(data_df.founded_at)
-data_df.first_funding_at=pd.to_datetime(data_df.first_funding_at)
-data_df.last_funding_at=pd.to_datetime(data_df.last_funding_at)
+data_df.founded_at = pd.to_datetime(data_df.founded_at)
+data_df.first_funding_at = pd.to_datetime(data_df.first_funding_at)
+data_df.last_funding_at = pd.to_datetime(data_df.last_funding_at)
 
 
 # To find negative values, we'll use **box plots**. Box plots make it easy to spot and fix negative values that could be mistakes or unusual data.
 # 
-# According to our data set, most of the features are binary which are not suitable for negative values detection, therefore we will consider only the following continuous variables.
+# According to our data set, most of the features are binary which are not suitable for negative values detection. Therefore we will consider only the following continuous variables.
 
 # In[76]:
 
 
-continuous_variables = ['avg_participants','age_first_funding_year','age_last_funding_year','age_first_milestone_year','age_last_milestone_year']
+continuous_variables = [
+    'avg_participants',
+    'age_first_funding_year',
+    'age_last_funding_year',
+    'age_first_milestone_year',
+    'age_last_milestone_year'
+]
 plt.figure(figsize=(15, 7))
 for i in range(0, len(continuous_variables)):
     plt.subplot(1, len(continuous_variables), i+1)
@@ -247,24 +233,26 @@ for i in range(0, len(continuous_variables)):
     plt.tight_layout()
 
 
-# **Box plots** show us these main observations:
-#   
+# The main observations are: 
 # - In box plots 2, 3, 4, and 5, the points that appear outside the main body of the box plot represent values that are outside the typical range of the dataset. 
 # 
 # - The points lying above the upper whisker represent the positive outliers. We will address these in a later stage of our analysis.
 # 
 # Let's now look at how two variables relate to each other and spot negative values using scatter plots. 
 # 
-# **Scatter plots** help us see the connection between two variables, making it easier to find unusual points or negative values when we look at them together.
+# **Scatter plots** help us see the connection between two variables, making it easier to find unusual points or negative values.
 
 # In[77]:
 
 
 def outliers_analysis(data_df):
     # Perform calculations and add results as new columns in the DataFrame
-    data_df['diff_founded_first_funding'] = data_df["first_funding_at"].dt.year - data_df["founded_at"].dt.year
-    data_df['diff_founded_last_funding'] = data_df["last_funding_at"].dt.year - data_df["founded_at"].dt.year
-
+    data_df["diff_founded_first_funding"] = (
+        data_df["first_funding_at"].dt.year - data_df["founded_at"].dt.year
+    )
+    data_df["diff_founded_last_funding"] = (
+        data_df["last_funding_at"].dt.year - data_df["founded_at"].dt.year
+    )
     # Define a custom color palette for negative and non-negative values
     custom_palette = {0: "blue", 1: "red"}
 
@@ -352,9 +340,7 @@ for column in columns_to_check :
 
 # #### Handle Negative Values
 
-# Once we've identified them, we can proceed to address them with the following function.
-# 
-# **abs()function** is a valuable tool in data manipulation and numerical analysis for quickly and reliably obtaining absolute values. By taking the **absolute values** (converting them to positive values), you remove the negative sign and focus on the magnitude or distance from zero. 
+# We will now use `np.abs` to take the absolute value of the input.
 
 # In[79]:
 
@@ -365,19 +351,6 @@ data_df["age_first_milestone_year"]=np.abs(data_df["age_first_milestone_year"])
 data_df["age_last_milestone_year"]=np.abs(data_df["age_last_milestone_year"])
 
 
-# After appliying the function we can use the following code to confirm it.
-
-# In[80]:
-
-
-columns_to_check  = ["age_first_funding_year", "age_last_funding_year", "age_first_milestone_year", "age_last_milestone_year"]
-for column in columns_to_check :
-    has_negative_values = (data_df[column] < 0).any()
-    print(f"Negative values in '{column}' column: {has_negative_values}")
-
-
-#  In outlier detection or anomaly detection tasks, absolute values can help identify extreme deviations regardless of their direction.
-# 
 # Let's observe how the plot changed after removing negative values.
 
 # In[81]:
@@ -436,20 +409,19 @@ def plot_outlier_scatterplots(data_df):
 plot_outlier_scatterplots(data_df)
 
 
-# The outcome was a cleaner dataset, with all negative values successfully removed.
+# All negative values are successfully removed!
 # 
 # This time, we focus on the positive outliers (the red points) that were identified using the **z-score** method in our visualization. Let's proceed to analyze this method in detail.
 
 #  ### Outliers
 
-# Outliers are extreme values in a dataset.  Earlier, we use methods such as **Box Plot** and **Scatter Plot**.
-# 
-# We will delve into other two methods to identify the outliers:
+# Outliers are extreme values in a dataset.
+# We will use these tools to identify the outliers:
 # 
 # - **Histograms** to observe data distribution and spot anomalies.
 # - Statistical methods as **Z-scores**.
 # 
-# By closely looking at the histogram, we can see if there are any data points that are very different from the usual range of values. These outliers often show up as isolated bars or spikes on the histogram.
+# Using an histogram, we can see if there are any data points that are very different from the usual range of values. These outliers often show up as isolated bars or spikes.
 # 
 # Let's determine which variables have the highest number of outliers.
 
