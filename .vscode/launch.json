@@ -13,6 +13,17 @@
             "justMyCode": true
         },
         {
+            "name": "Python: Predict",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/model.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                //"data/test_predict.csv"
+            ]
+        },
+        {
             "name": "Python: Pytest",
             "type": "python",
             "request": "launch",

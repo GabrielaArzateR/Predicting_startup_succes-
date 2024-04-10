@@ -1,9 +1,7 @@
-<<<<<<< HEAD
+
 # Startup Success Predictor
-=======
-# # Startup Success Predictor
->>>>>>> main
-Welcome to the Startup Success Predictor, a data-driven solution for forecasting the success of startup ventures. This repository encompasses model training, evaluation, and prediction to help you gain valuable insights into the potential success of startups.
+
+Welcome to the Startup Success Predictor! This project uses data to predict how likely a startup is to succeed. Here, we train models, evaluate them, and make predictions to give you insights into a startup's potential success.
 
 ## Installation
 
@@ -24,14 +22,6 @@ Create a new environment and install the Python requirements:
 ```
 pip install -r requirements.txt
 
-<<<<<<< HEAD
-
-Follow these steps to set up the Startup Success Predictor on your local machine:
-
-
-
-## Demonstration Notebook
-=======
 ### Demonstration Notebook
 >>>>>>> main
 
@@ -77,8 +67,8 @@ The most important components are the following:
 - `data`: Contains the training and test data, organized into subdirectories for different classes.
 - `scripts`: Contains standalone Python scripts for training, evaluation, relabeling, and image similarity search.
 - `service.py`: Code for defining the BentoML service and APIs.
-- `terminator_classifier`: The main module, encompassing core functionality, data processing, and machine learning components.
-- `terminator_classifier/tests`: Includes test scripts for automated testing as part of Continuous Integration (CI).
+- `startup_prediction`: The main module, encompassing core functionality, data processing, and machine learning components.
+- `startup_prediction/tests`: Includes test scripts for automated testing as part of Continuous Integration (CI).
 
 ## Testing
 The repository employs Continuous Integration (CI) to ensure code quality and functionality. The CI is defined in `.github/workflows/main-ci.yml` and triggers on pull requests to the main branch. It runs various checks including:
@@ -89,6 +79,17 @@ The repository employs Continuous Integration (CI) to ensure code quality and fu
 - Mypy for static type checking.
 
 ## Features
+
+
+
+
+
+
+
+
+
+
+
 ### Model Training
 The model training is facilitated by the train.py script, which trains a ResNet50 model on image classification data. To execute the training script, use the following command:
 ```bash
@@ -125,7 +126,6 @@ curl -X POST \
 
 ```
 
-## Conclusion
 
 
 
