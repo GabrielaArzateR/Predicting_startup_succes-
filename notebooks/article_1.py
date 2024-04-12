@@ -9,32 +9,24 @@
 # 
 # This dataset contains information about industries, acquisitions, and investment details of nearly a thousand startups based in the USA from the 1980s to 2013.
 # 
-# To be able to extract interesting trends from data, it's essential to understand how to transform raw data into meaningful information. To achieve this goal, we will perform the following steps:
+# To extract interesting trends from data, it's essential to understand how to transform raw data into meaningful information. To achieve this goal, we will perform the following steps:
 # 
 # 1. Data exploration
 # 2. Pre-processing 
 # 3. Data analysis 
-# 4. Data-driven conclusions
-# 
-# Here are the main questions we will answer:
-# 
-# - In which industries are startup acquisitions most common?
-# - Does reaching certain milestones increase a startup's chance of being acquired?
-# - What is the average total funding for startups that get acquired versus those that fail?
-# - How do success rates compare between startups with Series A, B, or C and those supported by angel investors or venture capitalists?
+# 4. Data-driven conclusions 
 # 
 # Let's begin by understanding some concepts related to startups.
 # 
 # ## Understanding the Startup Ecosystem
-# Startups raise money in stages called **funding rounds**, like Series A, B, or C. These rounds enables the startups to invest in the necessary resources for their growth.
+# Startups raise money in stages called **funding rounds**, like Series A, B, or C. These rounds enable the startups to invest the necessary resources for their growth.
 # 
 # Startups set goals called **milestones**, like launching a product or getting a certain number of users. These reflect their performance to the investors.
 # 
-# Finally, startups secure funding from two types of source:
+# Finally, startups secure funding from two types of sources:
 # - **Angel investors** are individuals who provide personal capital for investment.
 # - **Venture capital firms** are corporate entities specializing in startup investments.
-# 
-# Now that you understand the context, let's start the data exploration.
+# Now that you understand the context, let's explore the data.
 
 # ## Data Exploration
 
@@ -42,7 +34,7 @@
 # 
 # First, we import the following libraries. These are the necessary packages we will use for data manipulation, analysis, and visualization.
 
-# In[594]:
+# In[153]:
 
 
 import os
@@ -52,26 +44,27 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
+from scipy.stats import zscore
 
 
 # Next, we load the data into a [Pandas](https://pandas.pydata.org/) dataframe.
 
-# In[ ]:
+# In[154]:
 
 
 file_path = os.path.join('..', 'saved_model', 'startup.csv')
 dataframe = pd.read_csv(file_path, encoding="ISO-8859-1")
+dataframe.head(2)
 
 
 # The `status` variable is the most important feature in this dataset. This binary variable indicates whether a startup has been acquired or closed.
 
-# In[596]:
+# In[155]:
 
 
 # Creating a DataFrame
 df = pd.DataFrame(dataframe)
 
-# Creating a binary variable
 df['binary_status'] = df['status'].map({'acquired': 1, 'closed': 0})
 
 # Counting the occurrences of each status
@@ -86,7 +79,7 @@ plt.title('Acquired vs. Closed Startups')
 plt.show()
 
 
-# 597 startups in our dataset were acquired, while 326 startups closed. This means around 64% of startups were acquired. This is a biased result. From [trustworthy sources](https://explodingtopics.com/blog/startup-failure-stats), we know that less than 10% of startup succeed. It is likely that most reported companies in this dataset were already successful startups.
+# 597 startups in our dataset were acquired, while 326 startups closed. This means around 64% of startups were acquired. This is a biased result. From [trustworthy sources](https://explodingtopics.com/blog/startup-failure-stats), we know that less than 10% of startup succeed. Most likely reported companies in this dataset were already successful startups.
 
 # ## Data Pre-processing
 
@@ -108,7 +101,7 @@ plt.show()
 #   
 # To start dropping variables, let's analyze the details contained in each feature.
 
-# In[597]:
+# In[156]:
 
 
 dataframe.head()
@@ -116,7 +109,7 @@ dataframe.head()
 
 # In this code block, we remove features that are not important and explain the main reasons.
 
-# In[ ]:
+# In[157]:
 
 
 dataframe = dataframe.drop([
@@ -127,11 +120,11 @@ dataframe = dataframe.drop([
     'id',              # Not useful for our analysis. 
     'name',            # Not useful for our analysis. 
     'Unnamed: 6',      # Not useful for our analysis. 
-    'object_id'],      # Not useful for our analysis. 
+    'object_id',       # Not useful for our analysis. 
     'labels',          # Information already included in "status" column.
     'state_code.1',    # Information already included in "state" column.
     'is_CA',           # Information already included in "state" column.
-    'is_NY',           # Information already included in "state" column..
+    'is_NY',           # Information already included in "state" column.
     'is_MA',           # Information already included in "state" column.
     'is_TX',           # Information already included in "state" column.
     'is_otherstate',   # Information already included in "state" column.
@@ -145,14 +138,12 @@ dataframe = dataframe.drop([
     'is_biotech',      # Information already included in "state" column.
     'is_consulting',   # Information already included in "state" column.
     'is_othercategory',# Information already included in "state" column.
-    axis=1,
-).copy()
-dataframe.head(2)
+], axis=1).copy()
 
 
 # We've simplified the DataFrame. It had 50 columns before, but now it has just 24. 
 
-# In[599]:
+# In[158]:
 
 
 dataframe.info()
@@ -175,7 +166,7 @@ dataframe.info()
 # 
 # It is important to handle missing values to preserve the integrity of your dataset. Without proper handling, null values can lead to errors or misleading results during statistical analyses.
 
-# In[600]:
+# In[159]:
 
 
 x = dataframe.isnull().sum()
@@ -189,7 +180,7 @@ print(missing_values)
 # 
 # Given that `age_first_milestone_year` and `age_last_milestone_year` are continuous numerical variables, our chosen imputation method will involve filling the missing values with the respective means for these variables.
 
-# In[601]:
+# In[160]:
 
 
 dataframe["age_first_milestone_year"] = dataframe["age_first_milestone_year"].fillna(
@@ -210,21 +201,11 @@ dataframe["age_last_milestone_year"] = dataframe["age_last_milestone_year"].fill
 # 
 # However, negative numbers might indicate errors. Thus requiring changes to the data.
 # 
-# Before we continue, we will convert the following columns into datetime format to ensure that they are suitable for a time based analysis.
-
-# In[602]:
-
-
-dataframe.founded_at = pd.to_datetime(dataframe.founded_at)
-dataframe.first_funding_at = pd.to_datetime(dataframe.first_funding_at)
-dataframe.last_funding_at = pd.to_datetime(dataframe.last_funding_at)
-
-
 # To find negative values, we'll use **box plots**. Box plots make it easy to spot and fix negative values that could be mistakes or unusual data.
 # 
 # According to our data set, most of the features are binary which are not suitable for negative values detection. Therefore we will consider only the following continuous variables.
 
-# In[603]:
+# In[161]:
 
 
 continuous_variables = [
@@ -242,90 +223,60 @@ for i in range(0, len(continuous_variables)):
 
 
 # The main observations are:
-# 
-# - In box plots 2, 3, 4, and 5, the points that appear outside the main body of the box plot represent values that are outside the typical range of the dataset. 
+# - In box plots 2, 3, 4, and 5, we observe the presence of negative values extending below the zero line on the y-axis.
+#   
 # - The points lying above the upper whisker represent the positive outliers. We will address these in a later stage of our analysis.
 # 
-# Let's see how two variables are connected and find negative values with scatter plots.
+# Let's see how two variables are connected and find negative values with the following methode.
 # 
 # **Scatter plots** help us see the connection between two variables, making it easier to find unusual points or negative values.
 
-# In[604]:
+# In[162]:
 
 
-def outliers_scatter_plot(data_df):
-    data_df["diff_founded_first_funding"] = (
-        data_df["first_funding_at"].dt.year - data_df["founded_at"].dt.year
-    )
-    data_df["diff_founded_last_funding"] = (
-        data_df["last_funding_at"].dt.year - data_df["founded_at"].dt.year
-    )
-    # Define a custom color palette for negative and non-negative values
+def negative_values_detection(dataframe):
+    def convert_to_datetime(dataframe, columns):
+        for col in columns:
+            dataframe[col] = pd.to_datetime(dataframe[col])
+
+        dataframe["diff_founded_first_funding"] = (
+            dataframe["first_funding_at"].dt.year - dataframe["founded_at"].dt.year
+        )
+        dataframe["diff_founded_last_funding"] = (
+            dataframe["last_funding_at"].dt.year - dataframe["founded_at"].dt.year
+        )
+
+    def add_negative_value_columns(dataframe, columns):
+        for col in columns:
+            dataframe[f'negative_{col}'] = (dataframe[col] < 0).astype(int)
+
     custom_palette = {0: "blue", 1: "red"}
 
-    # Create new columns to identify negative values
-    data_df['negative_first_funding'] = (data_df["age_first_funding_year"] < 0).astype(int)
-    data_df['negative_last_funding'] = (data_df["age_last_funding_year"] < 0).astype(int)
-    data_df['negative_first_milestone'] = (data_df["age_first_milestone_year"] < 0).astype(int)
-    data_df['negative_last_milestone'] = (data_df["age_last_milestone_year"] < 0).astype(int)
+    def create_scatter_plots(dataframe, plots_config, figsize=(18, 3), dpi=100, custom_palette={0: "blue", 1: "red"}):
+        plt.figure(figsize=figsize, dpi=dpi)
 
-    plt.figure(figsize=(18, 3), dpi=100)
+        for i, (x, y, hue, xlabel, ylabel) in enumerate(plots_config, start=1):
+            plt.subplot(1, len(plots_config), i)
+            sns.scatterplot(x=x, y=y, hue=hue, palette=custom_palette, data=dataframe)
+            plt.xlabel(xlabel)
+            plt.ylabel(ylabel)
 
-    # Configuration for each subplot
+        plt.tight_layout()
+        plt.show()
+
     plots_config = [
-        {
-            "x": "age_first_funding_year",
-            "y": "age_first_milestone_year",
-            "hue": "negative_first_milestone",
-            "xlabel": "Age at First Funding Year",
-            "ylabel": "Age at First Milestone Year",
-            "data": data_df
-        },
-        {
-            "x": "age_last_funding_year",
-            "y": "age_last_milestone_year",
-            "hue": "negative_last_milestone",
-            "xlabel": "Age at Last Funding Year",
-            "ylabel": "Age at Last Milestone Year",
-            "data": data_df
-        },
-        {
-            "x": "diff_founded_first_funding",
-            "y": "age_first_funding_year",
-            "hue": "negative_first_funding",
-            "xlabel": "Difference 'Founded' and 'First Funding'",
-            "ylabel": "Age at First Funding Year",
-            "data": data_df  # Specify the DataFrame
-        },
-        {
-            "x": "diff_founded_last_funding",
-            "y": "age_last_funding_year",
-            "hue": "negative_last_funding",
-            "xlabel": "Difference 'Founded' and 'Last Funding'",
-            "ylabel": "Age at Last Funding Year",
-            "data": data_df
-        }
-    
-       
+        ("age_first_funding_year", "age_first_milestone_year", "negative_age_first_milestone_year", "Age at First Funding Year", "Age at First Milestone Year"),
+        ("age_last_funding_year", "age_last_milestone_year", "negative_age_last_milestone_year", "Age at Last Funding Year", "Age at Last Milestone Year"),
+        ("diff_founded_first_funding", "age_first_funding_year", "negative_age_first_funding_year", "Difference 'Founded' and 'First Funding'", "Age at First Funding Year"),
+        ("diff_founded_last_funding", "age_last_funding_year", "negative_age_last_funding_year", "Difference 'Founded' and 'Last Funding'", "Age at Last Funding Year"),
     ]
 
-    # Generate each scatter plot based on the configuration
-    for i, config in enumerate(plots_config, start=1):
-        plt.subplot(1, 4, i)
-        sns.scatterplot(
-            x=config["x"], 
-            y=config["y"], 
-            hue=config["hue"], 
-            palette=custom_palette,
-            data=config["data"]  
-        )
-        plt.xlabel(config["xlabel"])
-        plt.ylabel(config["ylabel"])
+    convert_to_datetime(dataframe, ['founded_at', 'first_funding_at', 'last_funding_at'])
+    add_negative_value_columns(dataframe, ['age_first_funding_year', 'age_last_funding_year', 'age_first_milestone_year', 'age_last_milestone_year'])
+    create_scatter_plots(dataframe, plots_config)
 
-    plt.tight_layout()  # Adjust the layout
-    plt.show()
-
-outliers_scatter_plot(dataframe)
+# Call the function
+negative_values_detection(dataframe)
 
 
 # From the scatterplot we identified the following: 
@@ -337,90 +288,87 @@ outliers_scatter_plot(dataframe)
 
 # #### Handle Negative Values
 
-# Using the absolute value is a method for handling effectively negative values. We can achieve this with the `np.abs` function:
+# Using the absolute value is a method for handling effectively negative values. We can achieve this with the `np.abs` function. Let's observe how the plot changed after removing negative values.
 
-# In[605]:
-
-
-dataframe["age_first_funding_year"]=np.abs(dataframe["age_first_funding_year"])
-dataframe["age_last_funding_year"]=np.abs(dataframe["age_last_funding_year"])
-dataframe["age_first_milestone_year"]=np.abs(dataframe["age_first_milestone_year"])
-dataframe["age_last_milestone_year"]=np.abs(dataframe["age_last_milestone_year"])
+# In[163]:
 
 
-# Let's observe how the plot changed after removing negative values.
+def apply_absolute_values(dataframe, columns):
+    for col in columns:
+        if col in dataframe.columns:  
+            dataframe[col] = np.abs(dataframe[col])
 
-# In[606]:
+columns_to_abs = ["age_first_funding_year", "age_last_funding_year", "age_first_milestone_year", "age_last_milestone_year"]
+apply_absolute_values(dataframe, columns_to_abs)
 
+def identify_outliers(dataframe, columns, threshold=4):
+    dataframe['is_outlier'] = 0  # Initialize the is_outlier column
+    
+    for column_name in columns:
+        if column_name in dataframe:
+            column = dataframe[column_name]
+            mean = column.mean()
+            std = column.std()
+            is_outlier = (np.abs(column - mean) > threshold * std)  # Calculate outliers based on the threshold
+            dataframe['is_outlier'] |= is_outlier.astype(int)  # Update is_outlier column accordingly
+    
+    return dataframe
 
-def identify_outliers(data_df):
-    threshold = 4  
-    column_name = "age_first_funding_year"
-    column = data_df[column_name]
-    mean = column.mean()
-    std = column.std()
-    is_outlier = (np.abs(column - mean) > threshold * std)
-    data_df['is_outlier'] = is_outlier.astype(int)
-    return data_df
+def prepare_plot_data(data_df):
+    """
+    Prepares the data by calculating necessary columns for plotting.
+    """
+    # Calculate the absolute differences and add them as new columns to the DataFrame
+    data_df["abs_diff_founded_first_funding"] = np.abs(data_df["first_funding_at"].dt.year - data_df["founded_at"].dt.year)
+    data_df["abs_diff_founded_last_funding"] = np.abs(data_df["last_funding_at"].dt.year - data_df["founded_at"].dt.year)
 
-dataframe = identify_outliers(dataframe)
+plot_configs = [
+    ("age_first_funding_year", "age_first_milestone_year", "Age at First Funding vs. Age at First Milestone"),
+    ("age_last_funding_year", "age_last_milestone_year", "Age at Last Funding vs. Age at Last Milestone"),
+    ("abs_diff_founded_first_funding", "age_first_funding_year", "Difference 'Founded' and 'First Funding'"),
+    ("abs_diff_founded_last_funding", "age_last_funding_year", "Difference 'Founded' and 'Last Funding'"),
+]
 
-def plot_outlier_scatterplots(data_df):
-    custom_palette = {0: "blue", 1: "red"}
-    plt.figure(figsize=(16, 3), dpi=100)
+def plot_scatter_plots(data_df, plot_configs, custom_palette={0: "blue", 1: "red"}):
+    """
+    Generates scatter plots based on the provided configuration.
+    """
+    plt.figure(figsize=(18, 3), dpi=100)
 
-    # Plot configurations
-    plot_configs = [
+    for x, y, label in plot_configs:
+        # Determine the index for subplotting dynamically
+        index = plot_configs.index((x, y, label)) + 1
+        plt.subplot(1, len(plot_configs), index)
+        sns.scatterplot(x=x, y=y, hue="is_outlier", palette=custom_palette, data=data_df)
+        plt.xlabel(label)
+        plt.ylabel(y)
 
-        {
-            "x": data_df["age_first_funding_year"],
-            "y": data_df["age_first_milestone_year"],
-            "label": None  # No label specified
-        },
-        {
-            "x": data_df["age_last_funding_year"],
-            "y": data_df["age_last_milestone_year"],
-            "label": None  # No label specified
-        },
-        {
-            "x": np.abs(data_df["first_funding_at"].dt.year - data_df["founded_at"].dt.year),
-            "y": data_df["age_first_funding_year"],
-            "label": "Difference 'Founded' and 'First Funding'"
-        },
-        {
-            "x": np.abs(data_df["last_funding_at"].dt.year - data_df["founded_at"].dt.year),
-            "y": data_df["age_last_funding_year"],
-            "label": "Difference 'Founded' and 'Last Funding'"
-        },
-      
-    ]
-
-    # Create each scatter plot
-    for i, config in enumerate(plot_configs, start=1):
-        plt.subplot(1, 4, i)
-        sns.scatterplot(x=config["x"], y=config["y"], hue=data_df["is_outlier"], palette=custom_palette)
-        if config["label"]:
-            plt.xlabel(config["label"])
-
-    plt.tight_layout()  #Adjust the layout
+    plt.tight_layout()
     plt.show()
 
-plot_outlier_scatterplots(dataframe)
+# Call prepare_plot_data to prepare necessary data for plotting
+prepare_plot_data(dataframe)
+
+# Call identify_outliers to identify outliers
+identify_outliers(dataframe, ['age_first_funding_year', 'age_last_funding_year', 'age_first_milestone_year', 'age_last_milestone_year'])
+
+# Call plot_scatter_plots to generate scatter plots
+plot_scatter_plots(dataframe, plot_configs)
 
 
 # All negative values are successfully removed!
 # 
-# This time, we focus on the positive outliers (the red points) that were identified using the **z-score** method in our visualization. Let's proceed to analyze this method in detail.
+# This time, we focus on the positive outliers (the red points). These points will be analyzed using histograms to better understand their distribution and frequency.
 
 #  ### Outliers
 
-# Outliers are data points that stand out from the rest of the data because they are much higher or lower than most of the other values in the dataset. To detect these outliers, we'll use two effective tools:
+# Outliers are data points that stand out from the rest of the data because they are much higher or lower than most of the other values in the dataset. To detect these outliers, we'll use two practical tools:
 # 
 # - **Histograms** These are visual representations that help us understand the distribution of our data. By plotting the frequency of data points, histograms make it easier to spot any values that fall far outside the typical range.
 # 
 # Let's determine which variables have the highest number of outliers.
 
-# In[607]:
+# In[164]:
 
 
 # Select only numeric columns for histogram plots
@@ -461,24 +409,22 @@ plt.show()
 # - `funding_total_usd`
 # - `relationships`
 
-# Now that we have identified outliers in our data, the next step is normalization. We will utilize the log-transformed method for this purpose.
-
 # #### Handle Outliers
 
-# To handle these outliers we will use the **log-transformed method** that involves taking the logarithm of each data point. It's useful when data has a wide range of values, helping to balance the data.
+# To handle these outliers we will use the **log-transformed method** that involves taking the logarithm of each data point. Can be useful when data has a wide range of values, helping to balance the data.
 # 
 # The following graph illustrates the dataset before and after applying log transformation.
 
-# In[608]:
+# In[165]:
 
 
-age_features = ["age_first_funding_year", "age_last_funding_year", "age_first_milestone_year", "age_last_milestone_year"]
+variables = ["age_first_funding_year", "age_last_funding_year", "age_first_milestone_year", "age_last_milestone_year"]
 
 # Create a figure with a specific size
 plt.figure(figsize=(17, 6), dpi=100)
 
 # Loop through the list of variables
-for i, variable in enumerate(age_features):
+for i, variable in enumerate(variables):
     # Regular histogram
     plt.subplot(2, 4, i + 1)
     sns.histplot(dataframe[variable], color="red", kde=True)
@@ -498,56 +444,29 @@ plt.show()
 # 
 # When you use the logarithm on data, **compresses** the outliers closer to the rest of the values. This makes the distribution of the data look more like a balanced and symmetrical shape, similar to a bell curve. 
 # 
-# It's important to note that log transformation doesn't remove outliers entirely; it reduces their impact.
+# It's important to note that log transformation doesn't remove outliers, it reduces their impact.
 #   
 # Now that we've addressed negative values and outliers, lets quickly inspect the first row of your DataFrame after sorting by index.
 
-# In[609]:
+# In[166]:
 
 
-dataframe.sort_index().head(3)
+dataframe.sort_index().head(2)
 
 
-# ### Creating Variables
+# #### Creating Variables
 
-# In this part, we'll demonstrate how useful it is to **create temporary variables**. The benefits of using temporary variables include ensuring the integrity of the original data, particularly during complex operations. 
+# Another way to make the data more suitable for analysis is to create new variables (features) from existing ones and potentially transform or modify the data. 
 # 
-# Previously, we retained missing values in the `closed_at` variable to preserve information (as certain startups are still active without arbitrarily assigning a closure date). Creating temporary variables allows us to use the data without making modifications to it.
+# We want to create a visualization of the **Number of Startups created Over the Years**. To achieve this, we will generate `founded_year` and `proportions` variables.
 
-# In[610]:
+# In[167]:
 
 
-dataframe = dataframe
-
-#We convert the 'closed_at' column to datetime format, handling any conversion errors. 
-dataframe['closed_at'] = pd.to_datetime(dataframe['closed_at'], errors='coerce')
-
-#Sort DataFrame by 'closed_at' in descending order revealing the most recent startup closures.
+#We have excluded the closed_at feature from our data analysis to avoid skewing results with closures. 
+#Our focus is on identifying factors that predict a startup's potential for acquisition.
 dataframe = dataframe.sort_values(by='closed_at', ascending=False )
-
-#Find the last closing date
-last_closed_date = dataframe['closed_at'].dropna().iloc[0]
-
-#Confirm is the right value
-print("Last startup closing date:", last_closed_date)
-
-#temporary variable, 'closed_temp,' is created to preserve non-null values of the 'closed_at' column for calculations.
-closed_temp = dataframe['closed_at'].copy()
-
-#Fill the null values in 'closed_temp' with the last closed date(2013-10-30)
-closed_temp.fillna(last_closed_date, inplace=True)
-
-#Calculate the relative age based on 'founded_at' and 'closed_temp'
-dataframe['age'] = ((closed_temp - dataframe['founded_at']).dt.days / 365.25).round(4)
-
-#Missing values in 'closed_at' are replaced with 'x' to signify operating startups.
-dataframe['closed_at'] = dataframe['closed_at'].fillna(value="x")
-
-#'Missing values in 'closed_at' are replaced with 'x' to signify operating startups.
-dataframe['closed_at'] = dataframe.closed_at.apply(lambda x: 1 if x =='x' else 0)
-
-# Convert 'founded_at' column to datetime objects
-dataframe['founded_at'] = pd.to_datetime(dataframe['founded_at'])
+dataframe = dataframe.drop(['closed_at'], axis=1).copy()
 
 # Extract and format the year from 'founded_at' as 'founded_year'
 dataframe['founded_year'] = dataframe['founded_at'].dt.strftime('%Y')
@@ -559,27 +478,12 @@ prop_df = dataframe.groupby('founded_year').size().reset_index(name = 'counts')
 prop_df['proportions'] = prop_df['counts']/prop_df['counts'].sum()
 
 
-# To summarize the steps we've taken:
-
-# 
-# - Create a temporary variable, `closed_temp` to hold non-null values from `closed_at`.
-# - Fill the null values in `closed_temp` with the last closed date (2013-10-30).
-# - Calculate the relative age based on `founded_at` and `closed_temp`.
-# - Replace missing values in `closed_at` with 'x' to indicate operating startups.
-# - Generate an additional variables named `founded_year` and `proportions` to create visualization.
-
-# In[611]:
-
-
-dataframe.sort_index().head(1)
-
-
 # ### Transforming Non-numeric Data into Numeric Values
 
 # Just like we did with our target variables previously, let's apply the **mapping** technique again to convert the remaining categorical features into numerical ones. 
 # 
 
-# In[612]:
+# In[168]:
 
 
 #Selecting key categorical columns for focused analysis or preprocessing allowing for 
@@ -587,7 +491,7 @@ dataframe.sort_index().head(1)
 columns_to_copy = ["status", "state_code", "category_code"]
 categorical_data = dataframe[columns_to_copy].copy()
 
-#Mapping categorican columns
+#Mapping categorical columns
 categorical_columns = ['state_code', 'city', 'category_code','founded_year','status']
 #Dictionary to store mappings
 column_mappings = {}
@@ -611,7 +515,7 @@ print(column_mappings)
 
 # We proceed with converting the **datetime features** to numerical values by transforming each specified column into days.
 
-# In[613]:
+# In[169]:
 
 
 # Set a reference date. You could choose the earliest date in your dataset or a specific date.
@@ -624,16 +528,8 @@ columns_to_convert = ['founded_at', 'first_funding_at', 'last_funding_at']
 for column in columns_to_convert:
     dataframe[f'{column}_days'] = (dataframe[column] - reference_date).dt.days
 
-# Now, 'founded_at_days', 'first_funding_at_days', and 'last_funding_at_days' are numerical 
- #columns representing the number of days from the reference date.
-# 'closed_at' remains unchanged as it is already in numerical format (int64).
-
 # Optionally, you might drop the original datetime columns if they're not needed anymore.
 dataframe.drop(['founded_at', 'first_funding_at', 'last_funding_at'], axis=1, inplace=True)
-
-#Removing certain features won't be beneficial for our analysis
-dataframe = dataframe.drop(['closed_at'], axis=1).copy()
-dataframe = dataframe.drop(['age'], axis=1).copy()
 
 
 # ## Recap of Data Preprocessing ####
@@ -646,16 +542,15 @@ dataframe = dataframe.drop(['age'], axis=1).copy()
 # 
 # - Addressing Negative Values: Utilized Box Plot and Scatter Plot methods to detect negative values, then handling them with the np.abs() function.
 # 
-# - Managing Outliers: Employed Histogram and z-score methods for outlier detection and subsequently addressed them using log-transformed technique.
+# - Managing Outliers: Employed Histograms for outlier detection and subsequently addressed them using log-transformed technique.
 # 
-# - Temporary Variable Creation: Implemented temporary variables to facilitate complex calculations without altering the original dataset.
+# - Creation Variables : From existing ones we generate and tranform variables.
 # 
-# - Conversion of Non-numeric Data: Converted non-numeric data into numeric values to improve analytical capabilities and model compatibility.
-# 
+# - Conversion of Non-numeric Data:  Changed text data to numbers to better analyze.
 
 # After finishing all the preprocessing steps, let's take a final quick look at the types of features in the dataset and their respective counts. Now that all features have been converted to numerical format, they're ready for data analysis.
 
-# In[614]:
+# In[170]:
 
 
 numerical_features = dataframe.select_dtypes(include=['number']).columns.tolist()
@@ -681,7 +576,7 @@ print(target_variable)
 
 # We export the cleaned DataFrame to a CSV file for further use or sharing. 
 
-# In[615]:
+# In[171]:
 
 
 dataframe.to_csv('cleaned_data.csv', index=False) 
@@ -693,7 +588,7 @@ dataframe.to_csv('cleaned_data.csv', index=False)
 
 # ### Top 10 Sectors with High Startup Acquisition Rates
 
-# In[615]:
+# In[171]:
 
 
 get_ipython().run_line_magic('matplotlib', 'inline')
@@ -744,11 +639,11 @@ plt.show()
 # <!---
 # Rephrase
 # -->
-# Now that we know the top industries for startups, our next task is to examine time related factors. This will help us understand how time affects trends in startup acquisitions.
+# Now that we know the top industries for startups, our next task is to examine time-related factors. This will help us understand how time affects trends in startup acquisitions.
 
 # ### Year of the highest number of startups founded
 
-# In[616]:
+# In[172]:
 
 
 fig, ax = plt.subplots(figsize=(50, 20))
@@ -774,15 +669,15 @@ plt.show()
 
 # Based on the visualization, we identify the following:
 # 
-# - Looking at the history of startups, we see a significant increase in activity up until 2007, indicating an era of rapid growth. The rise in startup activity during this era is probably connected to the rise of the internet and digital technologies.
-#   
+# - Looking at the history of startups, we see a significant increase in activity until 2007, indicating an era of rapid growth. The rise in startup activity during this era is probably connected to the rise of the internet and digital technologies.
+# - 
 # - However, after 2007, there was a drop that could have been caused by the worldwide financial crisis, market saturation, economic declines, or changes in how investors act.
 # 
-# Let's go a head to explore how location influences startup success.
+# Let's go ahead to explore how location influences startup success.
 
 # ### Startup Acquisitions Across U.S. States
 
-# In[617]:
+# In[173]:
 
 
 # Create the stacked bar chart
@@ -824,23 +719,19 @@ plt.show()
 
 # The bar chart shows the following location trends:
 # 
-# - California (CA) stands out with the highest total number of startups, where the number of acquired startups is more than double the number closed.
+# - California (CA) stands out with the highest number of startups, where the number of acquired startups is more than double the number closed.
 # 
-# - New York (NY) and Massachusetts (MA) also exhibit a pattern where more startups are being acquired than closed, suggesting a favorable startup environment in these states as well.
+# - New York (NY) and Massachusetts (MA) also exhibit a pattern where more startups are being acquired than closed, suggesting a favorable startup environment in these states.
 #   
 # - In other states such as Washington (WA), Texas (TX), and Colorado (CO), the numbers of acquisitions and closures are closer, pointing to a more challenging environment.
 
 # ### Factors correlated with startup acquisitions
 
-# Our objective is to understand the factors impacting the likelihood of a startup being acquired. To achieve this, we will use a correlation **Heatmap**.
+# We can use a correlation heatmap to easily identify the variables that are strongly correlated with the target variable `status`. 
 # 
-# Purpose of the visualization: 
-# 
-# - Provide a visual way to identify the variables that are highly correlated with the target `status`.
-# 
-# We will compare two correlation methods, Pearson's and Spearman,selecting just the features with the highest absolute correlation values.
+# We will compare two correlation methods - Pearson's and Spearman's - to analyze the features with absolute correlation values.
 
-# In[618]:
+# In[174]:
 
 
 def draw_heatmaps_side_by_side(data_df, target='status'):
@@ -890,7 +781,7 @@ draw_heatmaps_side_by_side(numerical_df_1)
 
 #  ### Does the number of milestones achieved impact a startup's chance of getting acquired?
 
-# In[619]:
+# In[175]:
 
 
 # Group your data by milestones and status and count the occurrences
@@ -970,19 +861,15 @@ fig.update_layout(
 fig.show()
 
 
-# The data indicates that startups achieving up to four milestones have a significantly higher likelihood of being acquired than those that dont.
+# The Sankey diagram indicates that Startups reaching 1-4 milestones have a higher chance of being acquired.
 # 
-# -  Startups reaching 2-4 milestones have a higher chance of being acquired, emphasizing early success.
+# This highlights the importance of validating a startup's business model and execution capabilities in the early stages. Startups can minimize the risk of closure by setting and achieving initial milestones, which can serve as a roadmap for new startups.
 # 
-# While the number of acquisitions decreases after reaching four milestones, the data consistently shows that achieving milestones positively influences a startup's likelihood of being acquired.
-#  
-# This trend reinforces the value of setting and reaching milestones as a strategy for startups aiming to get acquired and succeed in the industry
-# 
-# Having analyzed the significance of achieving milestones, let's now turn our attention to the types of investment.
+# Let's now turn our attention to the types of investment.
 
 # ### Do startups funded in rounds have a better chance of being acquired?
 
-# In[620]:
+# In[176]:
 
 
 # Filter the DataFrame for entries with a status of 1
@@ -1010,20 +897,18 @@ ax.text(0.2, 1.05, "Investment Types for Acquired Startups", fontsize=15, transf
 
 # Update the legend
 handles, labels = ax.get_legend_handles_labels()
-ax.legend(handles, ['Closed', 'Acquired'], title='Status')
+ax.legend(handles, ['Acquired','Closed'], title='Status')
 
 plt.show()
 
 
-# It shows that the majority of startups that received round D funding were acquired rather than closed. 
-# 
-# Investments from venture capital (VC) and rounds A, B, and C are more commonly associated with startups that were acquired, suggesting these types of investments might be linked to a higher likelihood of success.
-# 
-# Now that we have confirm the importance of type of invesment is a factor for a startup to succed or not, let's analyse another variable that was highly correlated with our target.
+#  The data suggests that startups that have been through funding rounds, especially up to Series C, have a better chance of being acquired than those that have not. 
+#  
+#  The likelihood of acquisition appears to increase with each successive round of funding, with the most substantial increase observed in Series C. The data indicates a positive correlation between the progression through funding rounds and the likelihood of acquisition.
 
 #  #### What's the average funding for acquired vs. closed startups?
 
-# In[621]:
+# In[177]:
 
 
 colors = ['#1f77b4', '#d62728']
@@ -1064,11 +949,12 @@ fig.update_xaxes(tickformat=".2s", exponentformat="none")
 fig.show()
 
 
-# From the histogram we can point the following: 
+# The histogram indicates that the total amount of funding a startup receives is not a clear determinant of whether it will be acquired or closed. 
 # 
 # Most startups, whether acquired or closed, tend to have lower levels of total funding, with the likelihood of either acquisition or closure diminishing as funding amounts increase.
 # 
-# While it's not universally true for every startup, the pattern of increased funding correlating with reduced risk of acquisition or closure is commonly observed in the startup ecosystem.
+# Startups across a wide range of funding levels have been acquired, although the likelihood of being acquired seems to decrease slightly as the total funding increases. 
+# 
 
 # ##  Data-driven conclusions
 
