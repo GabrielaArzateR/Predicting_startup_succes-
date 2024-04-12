@@ -82,7 +82,7 @@ plt.show()
 
 # ## Data Pre-processing
 
-# Pre-processing consists of cleaning and organizing the raw data:
+# Data pre-processing consists of cleaning and organizing the raw data:
 # - **Data cleaning**: This step involves identifying and correcting errors, such as typos, duplicates, or incorrect entries. It is essential for maintaining data integrity. We will pay particular attention to:
 # - - The irrelevant features.
 # - - The missing values.
@@ -93,7 +93,7 @@ plt.show()
 
 # ### Handle Irrelevant Features
 
-# An irrelevant feature is a data attribute that is not meaningful for the task. Eliminating irrelevant variables simplifies the analysis process. It ensures that we focus on meaningful factors by reducing unnecessary information and improving clarity in the data exploration.
+# An irrelevant feature is a variable that is not meaningful for the task. Eliminating irrelevant variables simplifies the analysis process. It ensures that we focus on meaningful factors by reducing unnecessary information and improving clarity in data exploration.
 #   
 # To start dropping variables, let's analyze the details contained in each feature.
 
@@ -137,7 +137,7 @@ dataframe = dataframe.drop([
 ], axis=1).copy()
 
 
-# We've simplified the DataFrame. It had 50 columns before, but now it has just 24. 
+# We've simplified the dataframe from 50 columns to 24. 
 
 # In[158]:
 
@@ -145,20 +145,20 @@ dataframe = dataframe.drop([
 dataframe.info()
 
 
-# Here's a description of the most important features:
+# Here's a description of the essential features:
 # - `state_code`: The state where the startup is located.
 # - `city`: The city where the startup is located.
-# - `founded_at`: Founding date
+# - `founded_at`: The startup's creation date.
 # - `closed_at`: The date when the startup was closed, if applicable.
 # - `relationships`: The number of key business relationships or partnerships the startup has.
 # - `funding_rounds`: The total number of funding rounds the startup has gone through.
-# - `funding_total_usd`: The total amount of funding the startup has received, in USD.
+# - `funding_total_usd`: The total funding the startup has received in USD.
 # - `milestones`: Total number of significant achievements or events in the life of a startup. 
-# - `category_code`: The primary field of the startup's business. Like `software`, `music` and so on.
+# - `category_code`: The primary field of the startup's business. Like `software`, `music`, and so on.
 
 #  ### Missing Values
 
-# Missing values are data points in a dataset where information is simply not recorded for a specific variable. 
+# Missing values are data points in a dataset where information is not recorded for a specific variable. 
 # 
 # It is important to handle missing values to preserve the integrity of your dataset. Without proper handling, null values can lead to errors or misleading results during statistical analyses.
 
@@ -187,7 +187,7 @@ dataframe["age_last_milestone_year"] = dataframe["age_last_milestone_year"].fill
 )
 
 
-# The missing values in `closed_at` represent startups that are still open and will not be filled for now. This approach preserves the information that certain startups are still active without arbitrarily assigning a closure date.
+# The missing values in `closed_at` represent startups that are still open and will not be replaced for now. This approach preserves the information that certain startups are still active without arbitrarily assigning a closure date.
 #   
 # Now that we've handled missing values, let's proceed with the negative values.
 
@@ -213,19 +213,17 @@ continuous_variables = [
 ]
 plt.figure(figsize=(15, 7))
 for i in range(0, len(continuous_variables)):
-    plt.subplot(1, len(continuous_variables), i+1)
+    plt.subplot(1, len(continuous_variables), i + 1)
     sns.boxplot(y=dataframe[continuous_variables[i]], color='blue', orient='v')
     plt.tight_layout()
 
 
 # The main observations are:
-# - In box plots 2, 3, 4, and 5, we observe the presence of negative values extending below the zero line on the y-axis.
-#   
+# 
+# - In box plots 2, 3, 4, and 5, we observe negative values extending below the zero line on the y-axis.
 # - The points lying above the upper whisker represent the positive outliers. We will address these in a later stage of our analysis.
 # 
-# Let's see how two variables are connected and find negative values with the following methode.
-# 
-# **Scatter plots** help us see the connection between two variables, making it easier to find unusual points or negative values.
+# Let's see how two variables are connected using **scatter plots**. These visualizations help us see the connection between two variables, making it easier to find unusual data points or negative values.
 
 # In[162]:
 
@@ -246,9 +244,9 @@ def negative_values_detection(dataframe):
         for col in columns:
             dataframe[f'negative_{col}'] = (dataframe[col] < 0).astype(int)
 
-    custom_palette = {0: "blue", 1: "red"}
-
-    def create_scatter_plots(dataframe, plots_config, figsize=(18, 3), dpi=100, custom_palette={0: "blue", 1: "red"}):
+    def create_scatter_plots(
+        dataframe, plots_config, figsize=(18, 3), dpi=100, custom_palette={0: "blue", 1: "red"}
+    ):
         plt.figure(figsize=figsize, dpi=dpi)
 
         for i, (x, y, hue, xlabel, ylabel) in enumerate(plots_config, start=1):
@@ -268,17 +266,19 @@ def negative_values_detection(dataframe):
     ]
 
     convert_to_datetime(dataframe, ['founded_at', 'first_funding_at', 'last_funding_at'])
-    add_negative_value_columns(dataframe, ['age_first_funding_year', 'age_last_funding_year', 'age_first_milestone_year', 'age_last_milestone_year'])
+    add_negative_value_columns(
+        dataframe,
+        ['age_first_funding_year', 'age_last_funding_year', 'age_first_milestone_year', 'age_last_milestone_year']
+    )
     create_scatter_plots(dataframe, plots_config)
 
-# Call the function
 negative_values_detection(dataframe)
 
 
-# From the scatterplot we identified the following: 
+# From the scatter plot, we identified the following: 
 # 
 # - Negative values are highlighted in red, while positive values are indicated in blue.
-# - The occurrence of negative values could be attributed to several reasons, such a data entry errors, or a relative timing. However, without definitive context, we cannot be certain of the exact cause.
+# - The occurrence of negative values could be attributed to several reasons, such as data entry errors or relative timing. However, without definitive context, we cannot be certain of the exact cause.
 # 
 # Before starting our analysis, we'll focus on how to handle these negative values. By doing so, we can maintain the integrity of our analysis and ensure that our insights are based on accurate and representative data.
 
@@ -326,9 +326,7 @@ plot_configs = [
 ]
 
 def plot_scatter_plots(data_df, plot_configs, custom_palette={0: "blue", 1: "red"}):
-    """
-    Generates scatter plots based on the provided configuration.
-    """
+    """Generates scatter plots based on the provided configuration"""
     plt.figure(figsize=(18, 3), dpi=100)
 
     for x, y, label in plot_configs:
@@ -346,17 +344,18 @@ def plot_scatter_plots(data_df, plot_configs, custom_palette={0: "blue", 1: "red
 prepare_plot_data(dataframe)
 
 # Call identify_outliers to identify outliers
-identify_outliers(dataframe, ['age_first_funding_year', 'age_last_funding_year', 'age_first_milestone_year', 'age_last_milestone_year'])
+identify_outliers(
+    dataframe,
+    ['age_first_funding_year', 'age_last_funding_year', 'age_first_milestone_year', 'age_last_milestone_year']
+)
 
 # Call plot_scatter_plots to generate scatter plots
 plot_scatter_plots(dataframe, plot_configs)
 
 
-#  The second set of scatter plots shows the following:
+# After applying the absolute value transformation, all the negative values have been converted to positive ones. The absolute value effectively fixes any anomalies that result in a negative age.
 # 
-# - After applying the absolute value transformation, all the negative values have been converted to their positive counterparts. The absolute value effectively corrects any anomalies that resulted in negative ages or time spans, allowing for a more accurate representation of the time intervals between events.
-# 
-# This time, we focus on the positive outliers (the red points). These points will be analyzed using histograms to better understand their distribution and frequency.
+# Now, we will focus on the positive outliers (the red points). These points will be analyzed using histograms to better understand their distribution and frequency.
 
 #  ### Outliers
 
@@ -386,7 +385,7 @@ fig_height = num_rows * 5
 plt.figure(figsize=(fig_width, fig_height))
 
 for i, column in enumerate(specific_variables):
-    plt.subplot(num_rows, num_columns, i+1)
+    plt.subplot(num_rows, num_columns, i + 1)
     plt.title(column, fontsize=25)
     sns.histplot(dataframe[column], color="red", kde=True)  # Adding KDE for smooth distribution curve.
     plt.xlabel('')  
@@ -397,8 +396,7 @@ plt.tight_layout()
 plt.show()
 
 
-# As observed in the histogram, noticeable spikes are apparent in the data. Excluding binary variables, the variables with the most prominent spikes are:
-# 
+# As observed in the histograms, noticeable spikes are apparent in the data. The variables with the most prominent spikes are:
 # - `age_first_funding_year` 
 # - `age_first_milestone_year`
 # - `age_last_milestone_year`
@@ -407,9 +405,9 @@ plt.show()
 
 # #### Handle Outliers
 
-# To handle these outliers we will use the **log-transformed method** that involves taking the logarithm of each data point. Can be useful when data has a wide range of values, helping to balance the data.
+# To handle these outliers we will use the **log-transformed method** that involves taking the logarithm of each data point. It can be helpful when the data has a wide range of values, helping to balance the data.
 # 
-# The following set of graphs illustrates the dataset before and after applying log transformation.
+# The following graphs illustrate the dataset before and after applying log transformation:
 
 # In[165]:
 
@@ -438,11 +436,11 @@ plt.show()
 
 # The distinction is evident; in the blue histogram, the peak is noticeably lower than in the red histogram.
 # 
-# When you use the logarithm on data, **compresses** the outliers closer to the rest of the values. This makes the distribution of the data look more like a balanced and symmetrical shape, similar to a bell curve. 
+# The logarithm transformation **compresses** the outliers closer to the rest of the values. This makes the data distribution look more balanced and symmetrical, similar to a bell curve. 
 # 
-# It's important to note that log transformation doesn't remove outliers, it reduces their impact.
-#   
-# Now that we've addressed negative values and outliers, lets quickly inspect the first row of your DataFrame after sorting by index.
+# It's important to note that log transformation doesn't remove outliers. Instead, it reduces their impact.
+# 
+# Now that we've addressed negative values and outliers, let's quickly inspect the first row of your dataframe after sorting it by index.
 
 # In[166]:
 
@@ -452,9 +450,9 @@ dataframe.sort_index().head(2)
 
 # #### Creating Variables
 
-# Another way to make the data more suitable for analysis is to create new variables (features) from existing ones and potentially transform or modify the data. 
+# Another way to make the data more suitable for analysis is to create new variables (features) by transforming the data. 
 # 
-# We want to create a visualization of the **Number of Startups created Over the Years**. To achieve this, we will generate `founded_year` and `proportions` variables.
+# Later in the article, we want to visualize the number of startups created over the years. To achieve this, we will generate `founded_year` and `proportions` variables.
 
 # In[167]:
 
@@ -468,10 +466,10 @@ dataframe = dataframe.drop(['closed_at'], axis=1).copy()
 dataframe['founded_year'] = dataframe['founded_at'].dt.strftime('%Y')
 
 # Group the DataFrame by 'founded_year' and count occurrences
-prop_df = dataframe.groupby('founded_year').size().reset_index(name = 'counts')
+prop_df = dataframe.groupby('founded_year').size().reset_index(name='counts')
 
 # Calculate the proportions of startups founded each year
-prop_df['proportions'] = prop_df['counts']/prop_df['counts'].sum()
+prop_df['proportions'] = prop_df['counts'] / prop_df['counts'].sum()
 
 
 # ### Transforming Non-numeric Data into Numeric Values
@@ -482,14 +480,14 @@ prop_df['proportions'] = prop_df['counts']/prop_df['counts'].sum()
 # In[168]:
 
 
-#Selecting key categorical columns for focused analysis or preprocessing allowing for 
-#safe experimentation and manipulation.
+# Selecting key categorical columns for focused analysis or preprocessing allowing for 
+# safe experimentation and manipulation.
 columns_to_copy = ["status", "state_code", "category_code"]
 categorical_data = dataframe[columns_to_copy].copy()
 
-#Mapping categorical columns
+# Mapping categorical columns
 categorical_columns = ['state_code', 'city', 'category_code','founded_year','status']
-#Dictionary to store mappings
+# Dictionary to store mappings
 column_mappings = {}
 
 # Create a function to generate mappings
