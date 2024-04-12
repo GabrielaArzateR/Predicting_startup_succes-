@@ -201,7 +201,7 @@ dataframe["age_last_milestone_year"] = dataframe["age_last_milestone_year"].fill
 # 
 # However, negative numbers might indicate errors. Thus requiring changes to the data.
 # 
-# To find negative values, we'll use **box plots**. Box plots make it easy to spot and fix negative values that could be mistakes or unusual data.
+# To find negative values, we'll use **box plots**. Box plots make it easy to spot negative values that could be mistakes or unusual data.
 # 
 # According to our data set, most of the features are binary which are not suitable for negative values detection. Therefore we will consider only the following continuous variables.
 
@@ -288,7 +288,7 @@ negative_values_detection(dataframe)
 
 # #### Handle Negative Values
 
-# Using the absolute value is a method for handling effectively negative values. We can achieve this with the `np.abs` function. Let's observe how the plot changed after removing negative values.
+# Using the absolute value is a method for effectively handling negative values. We can achieve this with the `np.abs` function. Let's observe how the plot changed after removing negative values.
 
 # In[163]:
 
@@ -356,7 +356,9 @@ identify_outliers(dataframe, ['age_first_funding_year', 'age_last_funding_year',
 plot_scatter_plots(dataframe, plot_configs)
 
 
-# All negative values are successfully removed!
+#  The second set of scatter plots shows the following:
+# 
+# - After applying the absolute value transformation, all the negative values have been converted to their positive counterparts. The absolute value effectively corrects any anomalies that resulted in negative ages or time spans, allowing for a more accurate representation of the time intervals between events.
 # 
 # This time, we focus on the positive outliers (the red points). These points will be analyzed using histograms to better understand their distribution and frequency.
 
@@ -413,7 +415,7 @@ plt.show()
 
 # To handle these outliers we will use the **log-transformed method** that involves taking the logarithm of each data point. Can be useful when data has a wide range of values, helping to balance the data.
 # 
-# The following graph illustrates the dataset before and after applying log transformation.
+# The following set of graphs illustrates the dataset before and after applying log transformation.
 
 # In[165]:
 
@@ -534,17 +536,17 @@ dataframe.drop(['founded_at', 'first_funding_at', 'last_funding_at'], axis=1, in
 
 # ## Recap of Data Preprocessing ####
 
-# After a comprehensive preprocessing transformation, we will outline the general steps we have taken with our data to improve its quality and gain more accurate insights.
+# After a comprehensive preprocessing transformation, we will outline the steps we have taken with our data to improve its quality and gain more accurate insights.
 # 
 # - Filtering Irrelevant Values: We simplified the dataframe by reducing the number of variables from 50 to 24, removing unnecessary ones.
 # 
 # - Handling Missing Values: Identified and managed missing values through imputation techniques.
 # 
-# - Addressing Negative Values: Utilized Box Plot and Scatter Plot methods to detect negative values, then handling them with the np.abs() function.
+# - Addressing Negative Values: Utilized Box Plot and Scatter Plot methods to detect negative values, then handled them with the np.abs() function.
 # 
-# - Managing Outliers: Employed Histograms for outlier detection and subsequently addressed them using log-transformed technique.
+# - Managing Outliers: Employed Histograms for outlier detection and addressed them using a log-transformed technique.
 # 
-# - Creation Variables : From existing ones we generate and tranform variables.
+# - Creation Variables : From existing ones, we generate and transform variables.
 # 
 # - Conversion of Non-numeric Data:  Changed text data to numbers to better analyze.
 
@@ -582,7 +584,7 @@ print(target_variable)
 dataframe.to_csv('cleaned_data.csv', index=False) 
 
 
-# After finally improving the quality of the data, we can now proceed to the most interesting part: getting some insights.
+# After finally improving the quality of the data, we can now proceed to the most exciting part: getting some insights.
 
 # ##  Data Analysis
 
@@ -630,16 +632,13 @@ plt.show()
 
 # As observed in the bar chart, we identify the following:
 # 
-# - The software industry not only has the highest number of startups but also sees a significant portion of these ventures being acquired by larger entities. 
+# - The software industry has the highest number of startups and sees a significant portion of these ventures being acquired by larger entities. 
 # 
-# - This trend highlights how the software industry's constant innovation and growth attracts big companies interested in new technologies or looking to grow their tech capabilities.
+# - This trend highlights how the software industry's constant innovation and growth attract big companies interested in new technologies or looking to grow their tech capabilities.
 # 
 # - Similarly, the web, mobile, and enterprise sectors emerge as vibrant ecosystems, containing many startups.
 # 
-# <!---
-# Rephrase
-# -->
-# Now that we know the top industries for startups, our next task is to examine time-related factors. This will help us understand how time affects trends in startup acquisitions.
+# Our next step is to examine time's influence on startup acquisition patterns in the industries.
 
 # ### Year of the highest number of startups founded
 
@@ -670,8 +669,8 @@ plt.show()
 # Based on the visualization, we identify the following:
 # 
 # - Looking at the history of startups, we see a significant increase in activity until 2007, indicating an era of rapid growth. The rise in startup activity during this era is probably connected to the rise of the internet and digital technologies.
-# - 
-# - However, after 2007, there was a drop that could have been caused by the worldwide financial crisis, market saturation, economic declines, or changes in how investors act.
+# 
+# - Following the year 2007, the market experienced a significant decline. Several factors could have brought about this decline. One of the possible reasons could have been the worldwide financial crisis that occurred around that time., market saturation, or changes in how investors act.
 # 
 # Let's go ahead to explore how location influences startup success.
 
@@ -723,7 +722,7 @@ plt.show()
 # 
 # - New York (NY) and Massachusetts (MA) also exhibit a pattern where more startups are being acquired than closed, suggesting a favorable startup environment in these states.
 #   
-# - In other states such as Washington (WA), Texas (TX), and Colorado (CO), the numbers of acquisitions and closures are closer, pointing to a more challenging environment.
+# - In other states such as Washington (WA), Texas (TX), and Colorado (CO), the number of acquisitions and closures are closer, pointing to a more challenging environment.
 
 # ### Factors correlated with startup acquisitions
 
@@ -773,9 +772,14 @@ numerical_df_1 = dataframe.select_dtypes(include=numerics)
 draw_heatmaps_side_by_side(numerical_df_1)
 
 
-# Based on the heatmaps comparing Spearman and Pearson correlation coefficients for top features correlated with startup 'status,' we can conclude.
+# Based on the heatmaps comparing Spearman and Pearson correlation coefficients for top features correlated with startup 'status,'we can conclude.
+# 
+# - `relationships` The number of partnerships a startup forms has a notable correlation with its outcomes, with Spearman at 0.47 and Pearson at 0.36. Strong business relationships can be an important factor in the growth and success of a startup.
 #   
-# - The features `relationships`, `milestones` achieved well as the number of `funding rounds` consistently show a positive correlation with `status` in both methods, implying that are potentially important indicators of startup success.
+# - `milestones` When a startup achieves significant objectives, it tends to have a more favorable outcome. The numbers show a strong correlation: 0.34 in Spearman's and 0.33 in Pearson's analysis, indicating that reaching milestones is a common characteristic of startups with positive results.
+#   
+# - `funding_rounds`The total amount of funding a startup receives is also connected to its outcomes. The data shows a Spearman correlation of 0.25 and a Pearson correlation of 0.21. This suggests that the more funding a startup has, the more likely it is to have a successful path.
+# 
 
 # Now that we have established their relationship, let's address each variable individually and proceed to explore the following key questions:
 
@@ -902,11 +906,14 @@ ax.legend(handles, ['Acquired','Closed'], title='Status')
 plt.show()
 
 
-#  The data suggests that startups that have been through funding rounds, especially up to Series C, have a better chance of being acquired than those that have not. 
-#  
-#  The likelihood of acquisition appears to increase with each successive round of funding, with the most substantial increase observed in Series C. The data indicates a positive correlation between the progression through funding rounds and the likelihood of acquisition.
+# Based on the data provided, startups that have gone through multiple rounds of funding (from angel investments to rounds A, B, C, and D) do show a higher likelihood of being acquired. 
+# 
+# Startups that go through more rounds of funding, especially those that secure venture capital or angel investment, are more likely to be acquired than to close down. This could mean that the more confidence investors have in a startup (as shown by continued funding), the greater the startup's chances of success, in this case being defined as an acquisition.
+# 
+# Each successful funding round may indicate that the startup is meeting milestones and scaling effectively, which can make it a more attractive target for acquisition. However, it's important to recognize that while the correlation exists, it does not guarantee an acquisition.
+# 
 
-#  #### What's the average funding for acquired vs. closed startups?
+#  #### Average funding for acquired vs. closed startups
 
 # In[177]:
 
@@ -949,12 +956,14 @@ fig.update_xaxes(tickformat=".2s", exponentformat="none")
 fig.show()
 
 
-# The histogram indicates that the total amount of funding a startup receives is not a clear determinant of whether it will be acquired or closed. 
+# The funding is shown in U.S. dollars, ranging from 0 to over 120 million
 # 
-# Most startups, whether acquired or closed, tend to have lower levels of total funding, with the likelihood of either acquisition or closure diminishing as funding amounts increase.
+# - A large majority of both acquired and closed startups have received funding of 20 million U.S. dollars or less.
+# - Startups that closed tend to have a higher frequency in the lower funding brackets (below 20 million USD) compared to those acquired.
+# - As the amount of funding increases, the number of closed startups decreases more rapidly than that of acquired startups.
+# Very few startups, whether acquired or closed, have funding above 60 million USD.
 # 
-# Startups across a wide range of funding levels have been acquired, although the likelihood of being acquired seems to decrease slightly as the total funding increases. 
-# 
+# Data suggests that having less funding is more common among startups that eventually close. Meanwhile, those that get acquired show a wider range of funding, including higher amounts. 
 
 # ##  Data-driven conclusions
 
