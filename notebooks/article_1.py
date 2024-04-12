@@ -32,7 +32,7 @@
 
 # Data exploration is the first step in data analysis. It involves examining datasets to identify patterns and anomalies. 
 # 
-# First, we import the following libraries. These are the necessary packages we will use for data manipulation, analysis, and visualization.
+# First, we import the following libraries. We will use these packages for data manipulation, analysis, and visualization:
 
 # In[153]:
 
@@ -44,7 +44,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
-from scipy.stats import zscore
 
 
 # Next, we load the data into a [Pandas](https://pandas.pydata.org/) dataframe.
@@ -57,18 +56,18 @@ dataframe = pd.read_csv(file_path, encoding="ISO-8859-1")
 dataframe.head(2)
 
 
-# The `status` variable is the most important feature in this dataset. This binary variable indicates whether a startup has been acquired or closed.
+# The `status` variable is the most important feature of this dataset. This binary variable indicates whether a startup has been acquired or closed.
 
 # In[155]:
 
 
 # Creating a DataFrame
-df = pd.DataFrame(dataframe)
+df_copy = pd.DataFrame(dataframe)
 
-df['binary_status'] = df['status'].map({'acquired': 1, 'closed': 0})
+df_copy['binary_status'] = df_copy['status'].map({'acquired': 1, 'closed': 0})
 
 # Counting the occurrences of each status
-status_counts = df['binary_status'].value_counts()
+status_counts = df_copy['binary_status'].value_counts()
 
 # Show the bar plot
 plt.bar(status_counts.index, status_counts.values, color=['green', 'red'])
@@ -79,21 +78,18 @@ plt.title('Acquired vs. Closed Startups')
 plt.show()
 
 
-# 597 startups in our dataset were acquired, while 326 startups closed. This means around 64% of startups were acquired. This is a biased result. From [trustworthy sources](https://explodingtopics.com/blog/startup-failure-stats), we know that less than 10% of startup succeed. Most likely reported companies in this dataset were already successful startups.
+# From [trustworthy sources](https://explodingtopics.com/blog/startup-failure-stats), we know that less than 10% of startups succeed. In this dataset, 597 startups were acquired, while 326 closed, resulting in a success rate of 64%. This statistic is far from the truth, most likely because the companies reported in this dataset were already successful startups.
 
 # ## Data Pre-processing
 
-# The pre-processing step involves cleaning and organizing the raw data.
-# To do so, we will following these steps:
-# - **Data cleaning**: This step consists on identifying and correcting data errors, such as typos, duplicates, or incorrect entries. It is essential for maintaining data integrity. We will put a particular attention on handling:
+# Pre-processing consists of cleaning and organizing the raw data:
+# - **Data cleaning**: This step involves identifying and correcting errors, such as typos, duplicates, or incorrect entries. It is essential for maintaining data integrity. We will pay particular attention to:
 # - - The irrelevant features.
 # - - The missing values.
 # - - The negative values where it shouldn't be so.
-# 
-# - **Data transformation**: Modifies data to re-organize them into a format appropriate for performing analysis. These are the common transformation we will perform:
+# - **Data transformation**: Modifies data to re-organize them into a format appropriate for performing analysis. These are the common transformations we will perform:
 # - - **Normalization** and **standardization**: These techniques adjust data to a common scale, making it easier to compare them.
 # - - **Encoding categorical data**: Map categorical variables to integers.
-# 
 
 # ### Handle Irrelevant Features
 
@@ -364,9 +360,7 @@ plot_scatter_plots(dataframe, plot_configs)
 
 #  ### Outliers
 
-# Outliers are data points that stand out from the rest of the data because they are much higher or lower than most of the other values in the dataset. To detect these outliers, we'll use two practical tools:
-# 
-# - **Histograms** These are visual representations that help us understand the distribution of our data. By plotting the frequency of data points, histograms make it easier to spot any values that fall far outside the typical range.
+# Outliers are data points that stand out from the rest of the data because they are much higher or lower than most of the other values in the dataset. To detect these outliers, we'll use **histograms**. These are visual representations that help us understand the distribution of our data. By plotting the frequency of data points, histograms make it easier to spot any values that fall far outside the typical range.
 # 
 # Let's determine which variables have the highest number of outliers.
 
