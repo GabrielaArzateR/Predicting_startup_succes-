@@ -472,7 +472,7 @@ prop_df = dataframe.groupby('founded_year').size().reset_index(name='counts')
 prop_df['proportions'] = prop_df['counts'] / prop_df['counts'].sum()
 
 
-# ### Transforming Non-numeric Data into Numeric Values
+# ### Transforming Categorical into Integers
 
 # Just like we did with our target variables previously, let's apply the **mapping** technique again to convert the remaining categorical features into numerical ones. 
 # 
@@ -528,57 +528,18 @@ dataframe.drop(['founded_at', 'first_funding_at', 'last_funding_at'], axis=1, in
 
 # ## Recap of Data Preprocessing ####
 
-# After a comprehensive preprocessing transformation, we will outline the steps we have taken with our data to improve its quality and gain more accurate insights.
+# Let's recap the steps we have performed to improve data quality:
 # 
-# - Filtering Irrelevant Values: We simplified the dataframe by reducing the number of variables from 50 to 24, removing unnecessary ones.
-# 
-# - Handling Missing Values: Identified and managed missing values through imputation techniques.
-# 
-# - Addressing Negative Values: Utilized Box Plot and Scatter Plot methods to detect negative values, then handled them with the np.abs() function.
-# 
-# - Managing Outliers: Employed Histograms for outlier detection and addressed them using a log-transformed technique.
-# 
-# - Creation Variables : From existing ones, we generate and transform variables.
-# 
-# - Conversion of Non-numeric Data:  Changed text data to numbers to better analyze.
+# - **Filtering irrelevant values**: We simplified the dataframe by reducing the number of variables from 50 to 24, removing unnecessary ones.
+# - **Handling missing values**: Identified and handled missing values through imputation techniques.
+# **Addressing negative values**: We used Box Plot and Scatter Plot methods to detect negative values and then handled them with the `np.abs()` function.
+# - **Managing Outliers**: We detected outliers with histograms and addressed them using the log-transformed technique.
+# - **Created new features**: From existing ones, we generate and transform variables like `age` and the number of startups created each year.
+# - **Conversion of non-numeric data**:  Converted the text data to numbers to be able to analyze them.
 
-# After finishing all the preprocessing steps, let's take a final quick look at the types of features in the dataset and their respective counts. Now that all features have been converted to numerical format, they're ready for data analysis.
+# Now that we're done with data cleaning and feature engineering, we can proceed to the most exciting part: extracting some insights!
 
-# In[170]:
-
-
-numerical_features = dataframe.select_dtypes(include=['number']).columns.tolist()
-categorical_features = dataframe.select_dtypes(include=['object']).columns.tolist()
-datetime_features = dataframe.select_dtypes(include=['datetime']).columns.tolist()
-
-# Assuming the target variable is 'status'
-target_variable = ['status']
-
-# Print the lists along with the number of features
-print("Numerical Features ({0}):".format(len(numerical_features)))
-print(numerical_features)
-
-print("\nCategorical Features ({0}):".format(len(categorical_features)))
-print(categorical_features)
-
-print("\nDatetime Features ({0}):".format(len(datetime_features)))
-print(datetime_features)
-
-print("\nTarget Variable ({0}):".format(len(target_variable)))
-print(target_variable)
-
-
-# We export the cleaned DataFrame to a CSV file for further use or sharing. 
-
-# In[171]:
-
-
-dataframe.to_csv('cleaned_data.csv', index=False) 
-
-
-# After finally improving the quality of the data, we can now proceed to the most exciting part: getting some insights.
-
-# ##  Data Analysis
+# ## Data Analysis
 
 # ### Top 10 Sectors with High Startup Acquisition Rates
 
@@ -622,17 +583,15 @@ plt.tight_layout()  # Adjust layout to ensure everything fits without overlappin
 plt.show()
 
 
-# As observed in the bar chart, we identify the following:
+# As observed in the bar chart, we identify that:
 # 
 # - The software industry has the highest number of startups and sees a significant portion of these ventures being acquired by larger entities. 
-# 
 # - This trend highlights how the software industry's constant innovation and growth attract big companies interested in new technologies or looking to grow their tech capabilities.
+# - Similarly, the web and mobile sectors emerge as vibrant ecosystems, containing many startups.
 # 
-# - Similarly, the web, mobile, and enterprise sectors emerge as vibrant ecosystems, containing many startups.
-# 
-# Our next step is to examine time's influence on startup acquisition patterns in the industries.
+# Our next step is to examine time's influence on startup acquisitions.
 
-# ### Year of the highest number of startups founded
+# ### Year of the Highest Number of Startups Founded
 
 # In[172]:
 
@@ -660,9 +619,8 @@ plt.show()
 
 # Based on the visualization, we identify the following:
 # 
-# - Looking at the history of startups, we see a significant increase in activity until 2007, indicating an era of rapid growth. The rise in startup activity during this era is probably connected to the rise of the internet and digital technologies.
-# 
-# - Following the year 2007, the market experienced a significant decline. Several factors could have brought about this decline. One of the possible reasons could have been the worldwide financial crisis that occurred around that time., market saturation, or changes in how investors act.
+# - Looking at the history of startups, we see a significant increase in activity until 2007, indicating an era of rapid growth. The rise in startup activity during this period is probably connected to the rise of the internet and digital technologies.
+# - Following the year 2007, the market experienced a significant decline. Several factors could have caused it. One of the possible reasons could have been the worldwide financial crisis that occurred around that time, market saturation, or changes in how investors act.
 # 
 # Let's go ahead to explore how location influences startup success.
 
@@ -714,11 +672,11 @@ plt.show()
 # 
 # - New York (NY) and Massachusetts (MA) also exhibit a pattern where more startups are being acquired than closed, suggesting a favorable startup environment in these states.
 #   
-# - In other states such as Washington (WA), Texas (TX), and Colorado (CO), the number of acquisitions and closures are closer, pointing to a more challenging environment.
+# - In other states such as Washington (WA), Texas (TX), and Colorado (CO), the number of acquisitions and closures are closer, pointing to a more challenging location.
 
 # ### Factors correlated with startup acquisitions
 
-# We can use a correlation heatmap to easily identify the variables that are strongly correlated with the target variable `status`. 
+# We can use a correlation heatmap to identify the variables strongly correlated with the startup success rate.
 # 
 # We will compare two correlation methods - Pearson's and Spearman's - to analyze the features with absolute correlation values.
 
@@ -726,8 +684,6 @@ plt.show()
 
 
 def draw_heatmaps_side_by_side(data_df, target='status'):
-    """
-    """
     # Ensure target is in DataFra
     if target not in data_df.columns:
         raise ValueError(f"Target '{target}' not found in DataFrame columns.")
@@ -764,16 +720,11 @@ numerical_df_1 = dataframe.select_dtypes(include=numerics)
 draw_heatmaps_side_by_side(numerical_df_1)
 
 
-# Based on the heatmaps comparing Spearman and Pearson correlation coefficients for top features correlated with startup 'status,'we can conclude.
+# Based on the heatmaps comparing Spearman and Pearson correlation coefficients for top features correlated with startup `status`, we can conclude:
 # 
-# - `relationships` The number of partnerships a startup forms has a notable correlation with its outcomes, with Spearman at 0.47 and Pearson at 0.36. Strong business relationships can be an important factor in the growth and success of a startup.
-#   
-# - `milestones` When a startup achieves significant objectives, it tends to have a more favorable outcome. The numbers show a strong correlation: 0.34 in Spearman's and 0.33 in Pearson's analysis, indicating that reaching milestones is a common characteristic of startups with positive results.
-#   
-# - `funding_rounds`The total amount of funding a startup receives is also connected to its outcomes. The data shows a Spearman correlation of 0.25 and a Pearson correlation of 0.21. This suggests that the more funding a startup has, the more likely it is to have a successful path.
-# 
-
-# Now that we have established their relationship, let's address each variable individually and proceed to explore the following key questions:
+# - `relationships`: The number of partnerships a startup forms has a notable correlation with its outcomes, with Spearman factor at `0.47` and Pearson at `0.36`. Strong business relationships can be an important factor in the growth and success of a startup.
+# - `milestones`: When a startup achieves significant objectives, it tends to have a more favorable outcome. The numbers show a strong correlation: `0.34` in Spearman's and `0.33` in Pearson's analysis, indicating that reaching milestones is a common characteristic of startups with positive results.
+# - `funding_rounds`: The total amount of funding a startup receives is also connected to its outcomes. The data shows a Spearman correlation of `0.25` and a Pearson correlation of `0.21`. This suggests that the more funding a startup has, the more likely it is to succeed.
 
 #  ### Does the number of milestones achieved impact a startup's chance of getting acquired?
 
@@ -857,9 +808,9 @@ fig.update_layout(
 fig.show()
 
 
-# The Sankey diagram indicates that Startups reaching 1-4 milestones have a higher chance of being acquired.
+# The Sankey diagram indicates that Startups reaching 1 to 4 milestones have a higher chance of being acquired.
 # 
-# This highlights the importance of validating a startup's business model and execution capabilities in the early stages. Startups can minimize the risk of closure by setting and achieving initial milestones, which can serve as a roadmap for new startups.
+# This highlights the importance of validating a startup's business model and execution capabilities in the early stages. Startups can minimize the risk of closure by setting and achieving initial milestones.
 # 
 # Let's now turn our attention to the types of investment.
 
@@ -900,10 +851,9 @@ plt.show()
 
 # Based on the data provided, startups that have gone through multiple rounds of funding (from angel investments to rounds A, B, C, and D) do show a higher likelihood of being acquired. 
 # 
-# Startups that go through more rounds of funding, especially those that secure venture capital or angel investment, are more likely to be acquired than to close down. This could mean that the more confidence investors have in a startup (as shown by continued funding), the greater the startup's chances of success, in this case being defined as an acquisition.
+# Startups that go through more rounds of funding, especially those that secure venture capital or angel investment, are more likely to be acquired than to close down. This could mean that the more confidence investors have in a startup (as shown by continued funding), the greater the startup's chances of success.
 # 
-# Each successful funding round may indicate that the startup is meeting milestones and scaling effectively, which can make it a more attractive target for acquisition. However, it's important to recognize that while the correlation exists, it does not guarantee an acquisition.
-# 
+# Each successful funding round may indicate that the startup is meeting milestones and scaling effectively, which can make it a more attractive target for acquisition.
 
 #  #### Average funding for acquired vs. closed startups
 
@@ -948,18 +898,19 @@ fig.update_xaxes(tickformat=".2s", exponentformat="none")
 fig.show()
 
 
-# The funding is shown in U.S. dollars, ranging from 0 to over 120 million
+# The funding is shown in U.S. dollars, ranging from 0 to over 120 million.
 # 
-# - A large majority of both acquired and closed startups have received funding of 20 million U.S. dollars or less.
+# Here are the main insights from this visualization:
+# - Most acquired and closed startups have received funding of 20 million U.S. dollars or less.
 # - Startups that closed tend to have a higher frequency in the lower funding brackets (below 20 million USD) compared to those acquired.
 # - As the amount of funding increases, the number of closed startups decreases more rapidly than that of acquired startups.
-# Very few startups, whether acquired or closed, have funding above 60 million USD.
+# - Very few startups, whether acquired or closed, have funding above 60 million USD.
 # 
 # Data suggests that having less funding is more common among startups that eventually close. Meanwhile, those that get acquired show a wider range of funding, including higher amounts. 
 
 # ##  Data-driven conclusions
 
-# After a depth analysis of the variables,  it's apparent that certain factors strongly influence the likelihood of startups being acquired. These include number of business relationships, number and timing of milestones reached, types of investment, alongside the historical record of fundings are significant factors to consider.
+# After an in-depth analysis of the variables, it's apparent that certain factors strongly influence the success of startups. These include number of business relationships, number and timing of milestones reached, types of investment, alongside the historical record of fundings are significant factors to consider.
 # 
 # Data preprocessing played a key role in turning raw information into practical insights. Critical steps as imputation techniques, identifying negative and missing values and carefully addressing outliers provided meaningful and accurate information about the underlying patterns. 
 # 
