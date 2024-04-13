@@ -918,7 +918,7 @@ fig.show()
 
 # ##  Data-driven conclusions
 
-# The Startup Success Prediction dataset study shows several factors are important for a startup's chances of being bought by another company. The type and amount of funding received, the achievement of significant milestones, and the industry in which the startup operates are the most highly correlated with being acquired.
+# After an in-depth analysis, several factors were identified as important for a startup to increase its chances of being acquired by another company. The type and amount of funding received, the achievement of significant milestones, and the industry in which the startup operates are the most highly correlated factors with being acquired.
 # 
 # Startups that receive funding multiple times, especially those with big investments from venture capital or angel investors, are more likely to be bought than to close. Also, reaching key goals and working in fast-growing industries like software and technology helps startups succeed.
 # 
