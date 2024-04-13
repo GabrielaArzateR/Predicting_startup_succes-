@@ -34,7 +34,7 @@
 # 
 # First, we import the following libraries. We will use these packages for data manipulation, analysis, and visualization:
 
-# In[153]:
+# In[72]:
 
 
 import os
@@ -48,7 +48,7 @@ import plotly.express as px
 
 # Next, we load the data into a [Pandas](https://pandas.pydata.org/) dataframe.
 
-# In[154]:
+# In[73]:
 
 
 file_path = os.path.join('..', 'saved_model', 'startup.csv')
@@ -58,7 +58,7 @@ dataframe.head(2)
 
 # The `status` variable is the most important feature of this dataset. This binary variable indicates whether a startup has been acquired or closed.
 
-# In[155]:
+# In[74]:
 
 
 # Creating a DataFrame
@@ -97,7 +97,7 @@ plt.show()
 #   
 # To start dropping variables, let's analyze the details contained in each feature.
 
-# In[156]:
+# In[75]:
 
 
 dataframe.head()
@@ -105,7 +105,7 @@ dataframe.head()
 
 # In this code block, we remove features that are not important and explain the main reasons.
 
-# In[157]:
+# In[76]:
 
 
 dataframe = dataframe.drop([
@@ -139,7 +139,7 @@ dataframe = dataframe.drop([
 
 # We've simplified the dataframe from 50 columns to 24. 
 
-# In[158]:
+# In[77]:
 
 
 dataframe.info()
@@ -162,7 +162,7 @@ dataframe.info()
 # 
 # It is important to handle missing values to preserve the integrity of your dataset. Without proper handling, null values can lead to errors or misleading results during statistical analyses.
 
-# In[159]:
+# In[78]:
 
 
 x = dataframe.isnull().sum()
@@ -176,7 +176,7 @@ print(missing_values)
 # 
 # Given that `age_first_milestone_year` and `age_last_milestone_year` are continuous numerical variables, our chosen imputation method will involve filling the missing values with the respective means for these variables.
 
-# In[160]:
+# In[79]:
 
 
 dataframe["age_first_milestone_year"] = dataframe["age_first_milestone_year"].fillna(
@@ -201,7 +201,7 @@ dataframe["age_last_milestone_year"] = dataframe["age_last_milestone_year"].fill
 # 
 # According to our data set, most of the features are binary which are not suitable for negative values detection. Therefore we will consider only the following continuous variables.
 
-# In[161]:
+# In[80]:
 
 
 continuous_variables = [
@@ -225,7 +225,7 @@ for i in range(0, len(continuous_variables)):
 # 
 # Let's see how two variables are connected using **scatter plots**. These visualizations help us see the connection between two variables, making it easier to find unusual data points or negative values.
 
-# In[162]:
+# In[81]:
 
 
 def negative_values_detection(dataframe):
@@ -286,7 +286,7 @@ negative_values_detection(dataframe)
 
 # Using the absolute value is a method for effectively handling negative values. We can achieve this with the `np.abs` function. Let's observe how the plot changed after removing negative values.
 
-# In[163]:
+# In[82]:
 
 
 def apply_absolute_values(dataframe, columns):
@@ -363,7 +363,7 @@ plot_scatter_plots(dataframe, plot_configs)
 # 
 # Let's determine which variables have the highest number of outliers.
 
-# In[164]:
+# In[83]:
 
 
 # Select only numeric columns for histogram plots
@@ -409,7 +409,7 @@ plt.show()
 # 
 # The following graphs illustrate the dataset before and after applying log transformation:
 
-# In[165]:
+# In[84]:
 
 
 variables = ["age_first_funding_year", "age_last_funding_year", "age_first_milestone_year", "age_last_milestone_year"]
@@ -442,7 +442,7 @@ plt.show()
 # 
 # Now that we've addressed negative values and outliers, let's quickly inspect the first row of your dataframe after sorting it by index.
 
-# In[166]:
+# In[85]:
 
 
 dataframe.sort_index().head(2)
@@ -454,7 +454,7 @@ dataframe.sort_index().head(2)
 # 
 # Later in the article, we want to visualize the number of startups created over the years. To achieve this, we will generate `founded_year` and `proportions` variables.
 
-# In[167]:
+# In[86]:
 
 
 #We have excluded the closed_at feature from our data analysis to avoid skewing results with closures. 
@@ -477,7 +477,7 @@ prop_df['proportions'] = prop_df['counts'] / prop_df['counts'].sum()
 # Just like we did with our target variables previously, let's apply the **mapping** technique again to convert the remaining categorical features into numerical ones. 
 # 
 
-# In[168]:
+# In[87]:
 
 
 # Selecting key categorical columns for focused analysis or preprocessing allowing for 
@@ -509,7 +509,7 @@ print(column_mappings)
 
 # We proceed with converting the **datetime features** to numerical values by transforming each specified column into days.
 
-# In[169]:
+# In[88]:
 
 
 # Set a reference date. You could choose the earliest date in your dataset or a specific date.
@@ -543,7 +543,7 @@ dataframe.drop(['founded_at', 'first_funding_at', 'last_funding_at'], axis=1, in
 
 # ### Top 10 Sectors with High Startup Acquisition Rates
 
-# In[171]:
+# In[88]:
 
 
 get_ipython().run_line_magic('matplotlib', 'inline')
@@ -593,7 +593,7 @@ plt.show()
 
 # ### Year of the Highest Number of Startups Founded
 
-# In[172]:
+# In[89]:
 
 
 fig, ax = plt.subplots(figsize=(50, 20))
@@ -626,7 +626,7 @@ plt.show()
 
 # ### Startup Acquisitions Across U.S. States
 
-# In[173]:
+# In[90]:
 
 
 # Create the stacked bar chart
@@ -674,13 +674,13 @@ plt.show()
 #   
 # - In other states such as Washington (WA), Texas (TX), and Colorado (CO), the number of acquisitions and closures are closer, pointing to a more challenging location.
 
-# ### Factors correlated with startup acquisitions
+# ### Factors Correlated with Startup Acquisitions
 
 # We can use a correlation heatmap to identify the variables strongly correlated with the startup success rate.
 # 
 # We will compare two correlation methods - Pearson's and Spearman's - to analyze the features with absolute correlation values.
 
-# In[174]:
+# In[91]:
 
 
 def draw_heatmaps_side_by_side(data_df, target='status'):
@@ -726,9 +726,9 @@ draw_heatmaps_side_by_side(numerical_df_1)
 # - `milestones`: When a startup achieves significant objectives, it tends to have a more favorable outcome. The numbers show a strong correlation: `0.34` in Spearman's and `0.33` in Pearson's analysis, indicating that reaching milestones is a common characteristic of startups with positive results.
 # - `funding_rounds`: The total amount of funding a startup receives is also connected to its outcomes. The data shows a Spearman correlation of `0.25` and a Pearson correlation of `0.21`. This suggests that the more funding a startup has, the more likely it is to succeed.
 
-#  ### Does the number of milestones achieved impact a startup's chance of getting acquired?
+#  ### Impact of Milestone Achievement on Startup Acquisitions
 
-# In[175]:
+# In[92]:
 
 
 # Group your data by milestones and status and count the occurrences
@@ -814,9 +814,9 @@ fig.show()
 # 
 # Let's now turn our attention to the types of investment.
 
-# ### Do startups funded in rounds have a better chance of being acquired?
+# ### Impact of Round Funding on Startup Acquisitions
 
-# In[176]:
+# In[93]:
 
 
 # Filter the DataFrame for entries with a status of 1
@@ -855,42 +855,50 @@ plt.show()
 # 
 # Each successful funding round may indicate that the startup is meeting milestones and scaling effectively, which can make it a more attractive target for acquisition.
 
-#  #### Average funding for acquired vs. closed startups
+#  ### Average funding for acquired vs. closed startups
 
-# In[177]:
+# In[94]:
 
 
-colors = ['#1f77b4', '#d62728']
+import pandas as pd
+import plotly.express as px
+
+# Assuming 'dataframe' is defined elsewhere and has the column 'funding_total_usd' and 'status'
 
 # Filter out extreme outliers from the data
-max_value = dataframe['funding_total_usd'].quantile(0.99) 
-filtered_data = dataframe[dataframe['funding_total_usd'] < max_value]
+max_value = dataframe['funding_total_usd'].quantile(0.99)
+filtered_data = dataframe.loc[dataframe['funding_total_usd'] < max_value].copy()  # Ensure a copy is made
 
+# Map the status values
 status_mapping = {1: 'Acquired', 0: 'Closed'}
 filtered_data['status'] = filtered_data['status'].map(status_mapping)
+
+# Define the colors for the histogram
+colors = ['#1f77b4', '#d62728']
 
 # Create a histogram with the filtered data
 fig = px.histogram(data_frame=filtered_data, x='funding_total_usd', color='status',
                    labels={'funding_total_usd': 'Total Funding (USD in Millions)'},
-                   color_discrete_sequence=colors)  
-                   
+                   color_discrete_sequence=colors)
+
 # Update layout for better visualization
 fig.update_layout(
     title={
-        'text': 'Distribution of Total Funding : Acquired vs Closed Startups',
-        'y': 0.95,  # You can adjust this for vertical position
-        'x': 0.5,  # You can adjust this for horizontal position
+        'text': 'Distribution of Total Funding: Acquired vs Closed Startups',
+        'y': 0.95,
+        'x': 0.5,
         'xanchor': 'center',
         'yanchor': 'top',
         'font': {
             'size': 17,
-            'color': 'black',  # You can change the color if you want
-            'family': 'Arial, sans-serif', # You can change the font family if you want
+            'color': 'black',
+            'family': 'Arial, sans-serif'
         },
     },
     xaxis_title='Total Funding (USD in Millions)',
     yaxis_title='Frequency',
 )
+
 # Format the x-axis tick labels to display values in millions
 fig.update_xaxes(tickformat=".2s", exponentformat="none")
 
@@ -910,12 +918,16 @@ fig.show()
 
 # ##  Data-driven conclusions
 
-# After an in-depth analysis of the variables, it's apparent that certain factors strongly influence the success of startups. These include number of business relationships, number and timing of milestones reached, types of investment, alongside the historical record of fundings are significant factors to consider.
+# The Startup Success Prediction dataset study shows several factors are important for a startup's chances of being bought by another company. The type and amount of funding received, the achievement of significant milestones, and the industry in which the startup operates are the most highly correlated with being acquired.
 # 
-# Data preprocessing played a key role in turning raw information into practical insights. Critical steps as imputation techniques, identifying negative and missing values and carefully addressing outliers provided meaningful and accurate information about the underlying patterns. 
+# Startups that receive funding multiple times, especially those with big investments from venture capital or angel investors, are more likely to be bought than to close. Also, reaching key goals and working in fast-growing industries like software and technology helps startups succeed.
+# 
+# Building relationships with investors, mentors, and other industry professionals can help startups gain valuable insights that are essential for startups not just for immediate benefits but also for long-term sustainability and growth. These relationships can lead to better opportunities, more funding, valuable advice, and ultimately, increase the likelihood of a successful acquisition.
+# 
+# Data preprocessing played a key role in turning raw information into practical insights. Critical steps as imputation techniques, identifying negative and missing values, and carefully addressing outliers provided meaningful and accurate information about the underlying patterns. 
 # 
 # Keeping in mind that every technique will be used differently depending on the nature of the data. 
 # 
-# Visual representations enable us to decode intricate relationships, recognize trends, and making it more accessible and intuitive for interpretation.
+# Visual representations enable us to decode intricate relationships, recognize trends, and make them more accessible and intuitive for interpretation.
 # 
-# By following this workflow, a data analysis project becomes more manageable, efficient, and produces reliable results that can inform critical decisions in various domains, including startup success prediction.
+# By following this workflow, a data analysis project becomes more manageable efficient, and produces reliable results that can inform critical decisions in various domains, including startup success prediction.
